@@ -1,0 +1,205 @@
+<template name='login'>
+    <view class="main"> 
+        <scroll-view class="scrollView" scroll-y='true'>
+            <view class="logo-box">
+                <image  class="logo" src="../../image/logo.png" alt=""/>
+            </view>
+            <text class="hi">您好，</text>
+            <text class="msg">欢迎使用云客来登录</text>
+            <view class="container">
+                <input id="username" class="input" placeholder="请输入账号"/>
+                <input id="password" class="input" type="password" placeholder="密码"/>
+                <input id="identifyCode" class="input" placeholder="请输入验证码"/>
+                <text class="btnIdentifyCode">获取验证码</text>
+                <text class="btn" onclick={this.fnLogin}>登录</text>
+                <image class="icon username" src="../../icon/login_icon1.png"></image>
+                <image class="icon password" src="../../icon/login_icon2.png"></image>
+                <image class="icon password_eye" src="../../icon/login_icon3.png"></image>
+                <image class="icon identity" src="../../icon/login_icon4.png"></image>
+                <text class="icon tip" onclick={this.fnGetBack}>忘记密码?</text>
+            </view>
+        </scroll-view>
+    </view>
+</template>
+<script>
+export default {
+    name: "login",
+    apiready() {
+        //like created
+    },
+    data() {
+        return {
+            text: "Hello world!",
+            dataList: new Array(5).fill("../../image/api_100.png")
+        };
+    },
+    methods: {
+        fnLogin(e){
+            // this.toast('test')
+            var param = {
+				name: 'tab',
+                title: 'tabBar',
+				bgColor:'#fff',
+                slidBackEnabled: false,
+				tabBar: {
+                    index: 1,
+			    	animated: true,
+			    	list: [
+			    		{
+			      			text: "商品",
+                            iconPath: "widget://icon/bar_icon_1@3x.png",
+			      			selectedIconPath: "widget://icon/bar_icon_1@3x.png"
+			    		}, {
+			      			text: "订单",
+			      			iconPath: "widget://icon/bar_icon_2@3x.png",
+			      			selectedIconPath: "widget://icon/bar_icon_2@3x.png"
+			    		}, {
+			      			text: "我的",
+			      			iconPath: "widget://icon/bar_icon_3@3x.png",
+			      			selectedIconPath: "widget://icon/bar_icon_3@3x.png"
+			    		}
+			    	],
+			    	frames: [
+						{
+							title: "商品",//tab切换时对应的标题
+							name: "goods",
+							url: "../goods/main.stml",
+							//其他继承自openFrame的参数
+						}, {
+							title: "订单",
+							name: "order",
+							url: "../order/main.stml"
+							//其他继承自openFrame的参数
+						}, {
+							title: "我的",
+							name: "my",
+							url: "../my/main.stml"
+							//其他继承自openFrame的参数
+						}
+					]
+			  	}
+            }
+            try{
+                api.openTabLayout(param);
+            }catch(e){
+                this.toast(e);
+            }
+        },
+        fnGetBack(e){
+            api.openWin({
+                name: 'getBackPasswordSetup1',
+                url: '../getback/getback_password_step1.stml',
+            })
+        },
+        onsubmit(e) {
+            console.log(JSON.stringify(e.detail));
+        },
+        handleSwiperItemClick(e) {
+            api.toast({
+                msg: "您点击了第" + (e.dataset.index + 1) + "个轮播图"
+            });
+        },
+        handleMenuItemClick(e) {
+            api.toast({
+                msg: "您点击了菜单:" + e.dataset.title
+            });
+        },
+        
+        toast(msg) {
+            api.toast({
+                msg: msg,
+                location: 'middle',
+                global: true
+            });
+        }
+    }
+};
+</script>
+<style>
+
+.main {
+    width: 100%;
+    height: 100%;
+}
+.scrollView {
+    flex: 1;
+    margin-top: 45px;
+}
+.container {
+    padding: 20px;
+}
+
+.logo-box{
+    height: 117px;
+    line-height: 117px;
+    position: relative;
+}
+.logo{
+    position: absolute;
+    width: 89px;
+    height: 32px;
+    right: 28px;
+    bottom: 0px;
+}
+.hi{
+    font-family: PingFangSC-Regular;
+    font-size: 36px;
+    color: #000000;
+    line-height: 50px;
+    margin-left: 28px;
+}
+.msg{
+    opacity: 0.5;
+    font-family: PingFangSC-Regular;
+    font-size: 16px;
+    color: #000000;
+    margin-left: 28px;
+}
+.input {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    padding:0 0 0 30px;
+}
+
+.btn {
+    opacity:0.5;
+    height: 50px;
+    background-color: #D10028;
+    line-height: 50px;
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.btn:active {
+    opacity: 0.8;
+}
+.icon{position: absolute; width: 22px;height: 22px;}
+.username{left: 20px; top: 30px;}
+.password{left: 20px; top: 100px;}
+.btnIdentifyCode{
+    position: absolute; 
+    width: 100px;
+    right: 20px;
+    top:170px;
+    text-align: right;
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #D10028;
+    border: none;
+    border-left: 1px solid #ddd;
+}
+.password_eye{right: 20px; top: 100px;}
+.identity{left: 20px; top: 170px;}
+.tip{width:auto;right: 20px; top: 300px;font-family: PingFangSC-Regular;
+font-size: 12px;
+z-index:1000;
+color: #000000;
+}
+
+
+</style>

@@ -1,0 +1,30 @@
+<template name='tpl'>
+    <view class="page">
+		<text>page2</text>
+    </view>
+</template>
+<script>
+	export default {
+		name: 'tpl',
+		apiready(){//like created
+
+		},
+		data() {
+			return{
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+<style>
+    .page {
+        height: 100%;
+		background: #FCFCFC;
+		display:-webkit-box;
+		-webkit-box-orient:vertical;
+		-webkit-box-pack:center;
+    }
+</style>

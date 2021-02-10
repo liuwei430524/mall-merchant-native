@@ -1,0 +1,26 @@
+<template name='goods'>
+    <view class="page">
+		<text>商品界面</text>
+    </view>
+</template>
+<script>
+	export default {
+		name: 'goods',
+		apiready(){//like created
+
+		},
+		data() {
+			return{
+
+			}
+		},
+		methods: {
+
+		}
+	}
+</script>
+<style>
+    .page {
+        height: 100%;
+    }
+</style>
