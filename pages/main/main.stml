@@ -47,16 +47,16 @@ export default {
 			    	list: [
 			    		{
 			      			text: "商品",
-                            iconPath: "widget://icon/bar_icon_1@3x.png",
-			      			selectedIconPath: "widget://icon/bar_icon_1@3x.png"
+                            iconPath: "widget://icon/nav_goods.png",
+			      			selectedIconPath: "widget://icon/nav_goods_on.png"
 			    		}, {
 			      			text: "订单",
-			      			iconPath: "widget://icon/bar_icon_2@3x.png",
-			      			selectedIconPath: "widget://icon/bar_icon_2@3x.png"
+			      			iconPath: "widget://icon/nav_order.png",
+			      			selectedIconPath: "widget://icon/nav_order_on.png"
 			    		}, {
 			      			text: "我的",
-			      			iconPath: "widget://icon/bar_icon_3@3x.png",
-			      			selectedIconPath: "widget://icon/bar_icon_3@3x.png"
+			      			iconPath: "widget://icon/nav_my.png",
+			      			selectedIconPath: "widget://icon/nav_my_on.png"
 			    		}
 			    	],
 			    	frames: [
