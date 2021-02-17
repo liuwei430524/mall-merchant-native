@@ -1,13 +1,15 @@
-<template name='tpl'>
+<template name='orderDetail'>
     <view class="page">
 		this is detail page
     </view>
 </template>
 <script>
 	export default {
-		name: 'tpl',
+		name: 'orderDetail',
 		apiready(){//like created
-
+			api.toast({
+				msg:'come in detail page'
+			})
 		},
 		data() {
 			return{
@@ -21,6 +23,8 @@
 </script>
 <style>
     .page {
+		width: 100%;
         height: 100%;
+		background-color: red;
     }
 </style>

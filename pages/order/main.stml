@@ -60,36 +60,6 @@
                             <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
                         </view>
                         <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜必选白米饭</text><text class="menu-list-number red">X 4</text>
-                        </view>
-                        <view class="menu-list">
                             <text class="menu-list-name">餐具</text><text class="menu-list-number red">X 2</text>
                         </view>
                         <view class="menu-remark">                        
@@ -339,6 +309,12 @@ export default{
                     }
                 }
             }, function(ret, err) {
+                ret={}
+                let arr = []
+                for(let i=0;i<10;i++){
+                    arr.push({});
+                }
+                ret['data']=arr
                 if (ret && ret.data) {
                     var cartData = api.getGlobalData({key: 'cartInfo'});
                     var data = ret.data;
@@ -384,7 +360,7 @@ export default{
             var wareCount = e.currentTarget.dataset.wareCount;
             
             api.openWin({
-                name: 'ware'+id,
+                name: 'orderDetail',
                 url: './detail.stml',
                 pageParam: {
                     wareId: id,
