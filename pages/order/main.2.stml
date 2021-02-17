@@ -27,87 +27,56 @@
         <text class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} v-for="(item,index) in wareTypeList" data-index={index} onclick={this.fnSetNavMenuIndex}>{item.label}(8)</text>
     </scroll-view>
     <scroll-view scroll-y='true' class="warelist" enable-back-to-top refresher-enabled refresher-triggered={this.data.refresherTriggered} onrefresherrefresh={this.onrefresherrefresh} onscrolltolower={this.onscrolltolower}>
-        <!-- <view class="header">
+        <view class="header">
             <image class="banner" src={this.data.bannerUrl} placeholder="../../image/default_rect.png" thumbnail="false" mode="widthFix">
         </view>
         <view>
             <view class="cell" v-for="(item, index) in dataList">
                 <view data-id={item.id} data-wareCount={item.wareCount} class="container" onclick={this.fnOpenDetailWin}>
-                    
+                    <view class="container-header">
+                        <text class="no">8</text>
+                        <view class="receiver">
+                            <view class="receiver-user">
+                                <view class="receiver-user-name">
+                                    <text>张(女士)</text>
+                                    <text class="">call</text>
+                                </view>
+                                <view class="receiver-user-call">
+                                    <view class="receiver-address">南华大学 (求是园5栋604) · 1.0公里</view>
+                                    <image class="receiver-user-call-icon" src="../../icon/icon_phone.png"/>
+                                </view>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="list">
+                        <text class="list-left">0元饮品一盒【限1份】</text>
+                        <text class="list-right">x1</text>
+                    </view>
+                    <view class="list">
+                        <text class="list-left">0元饮品一盒【限1份】</text>
+                        <text class="list-right">x1</text>
+                    </view>
+                    <view class="list">
+                        <text class="list-left">0元饮品一盒【限1份】</text>
+                        <text class="list-right">x1</text>
+                    </view>
+                    <view class="list">
+                        <text class="list-left">0元饮品一盒【限1份】</text>
+                        <text class="list-right">x1</text>
+                    </view>
+                    <!-- <image class="thumbnail" src={item.thumbnail} placeholder="../../image/default_square.png"></image>
+                    <view class="info">
+                        <text class="info-name">{item.name + ' ' + (item.unit||'')}</text>
+                        <text class="info-description">{item.description}</text>
+                        <text class="info-price">{'￥'+item.price}</text>
+                        <text class="info-origin-price">{'￥'+item.originPrice}</text>
+                    </view>
+                    <view class="control">
+                        <image class={item.wareCount>0?'minus':'none'} data-index={index} src="../../image/minus.png" onclick={this.fnMinus}>
+                        <text class={item.wareCount>0?'count':'none'}>{item.wareCount}</text>
+                        <image class="add" data-index={index} src="../../image/add.png" onclick={this.fnAdd}>
+                    </view> -->
                 </view>
-            </view>
-        </view> -->
-        <view class="cell" v-for="(item, index) in dataList">
-            <view class="order-part" data-id={item.id} data-wareCount={item.wareCount} onclick={this.fnOpenDetailWin}>
-                <view class="order-info">
-                        <text class="order-info-number">8</text>
-                        <view class="order-info-person">
-                            <text class="order-info-name">邹（女士）</text>
-                            <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
-                        </view>
-                        <view class="order-info-phone">
-                            <image src="../../image/iphone.png" width="24" height="24">电话</image>
-                        </view>                    
-                </view>
-                <view class="menu-box">
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">小碗菜必选白米饭</text><text class="menu-list-number red">X 4</text>
-                        </view>
-                        <view class="menu-list">
-                            <text class="menu-list-name">餐具</text><text class="menu-list-number red">X 2</text>
-                        </view>
-                        <view class="menu-remark">                        
-                            <text class="menu-remark-fb">备注 @商家 麻烦饭菜分量多打点，一点肥肉不要，菜品要新鲜，辣椒放少许 顾客需要1份餐具</text>
-                        </view>
-                </view>
-                <view class="order-time">
-                        <text class="orer-time-tirp">要求送达：</text>
-                        <text class="order-time-date">11-19 17:41</text>
-                        <view class="order-pay">
-                            <text class="order-pay-tirp">实付：</text>
-                            <text class="order-pay-cny">￥97.39</text>
-                        </view>
-                </view>
-                <view class="order-operate">
-                        <button class="order-operate-btn1">打印</button>
-                        <button class="order-operate-btn2">配送下单</button>
-                </view>               
             </view>
         </view>
         <view class="footer">
@@ -385,7 +354,7 @@ export default{
             
             api.openWin({
                 name: 'ware'+id,
-                url: './detail.stml',
+                url: '../ware/ware.stml',
                 pageParam: {
                     wareId: id,
                     wareCount: wareCount
@@ -584,12 +553,12 @@ export default{
     }
 
     .cell {
-        min-height: 330px;
+        height: 230px;
         padding: 0 8px;
     }
 
     .container {
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
         width: 100%;
         height: 100%;
@@ -601,10 +570,9 @@ export default{
     }
     
     .container-header{
-        flex-direction: column;
+        flex-direction: row;
         width: 100%;
         height: 63px;
-        background-color: thistle;
     }
     .no{
         margin: 15px;
@@ -618,8 +586,16 @@ export default{
         color: #505050;
         text-align: center;
     }
+    .receiver{flex-direction: column;width: 100%;}
+    .receiver-user-name{flex-direction: row; width:100%;background-color: green;}
+    .receiver-user-call{width:100%;text-align: right;background-color: red;}
+    .receiver-user-call-icon{width:24px;height:24px;}
+    .list{flex-direction: row; width: 100%;height: 25px;}
+    .list-left{width: 50%;}
+    .list-right{width: 50%; text-align: right;}
 
-    .thumbnail {
+
+    /* .thumbnail {
         width: 100px;
         height: 100px;
     }
@@ -635,7 +611,7 @@ export default{
         font-size: 16px;
         color: #000;
         font-weight: 500;
-        width: 60px;
+        width: 100px;
         height: 40px;
     }
 
@@ -653,7 +629,7 @@ export default{
         font-size: 11px;
         color: #c0c0c0;
         text-decoration: line-through;
-    }
+    } */
 
     .control {
         flex-direction: row;
@@ -715,165 +691,4 @@ export default{
         width: 100%;
         height: 100%;
     }
-    .order-part{
-        flex-direction: column;
-        width: 100%;
-        background-color: #fff;
-        margin-top: 10px;
-        padding: 15px;
-        border-bottom: 0.5px solid #d1d1d1;
-    }
-    .order-info{
-        flex-direction: row;        
-        height: 43px;
-        width: 100%;       
-        margin-bottom: 10px;
-    }
-    .order-info-number{
-        width: 46px;
-        height: 43px;
-        background-color: #EDEDED;
-        font-size: 20px;
-        line-height: 43px;
-        text-align: center;
-        font-family: Arial, Helvetica, sans-serif;
-        color: #505050;
-       
-    }
-    
-    .order-info-person{
-        font-family: Arial, Helvetica, sans-serif;
-        height: 43px;
-        margin-left: 10px;        
-    }
-    .order-info-name{
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 26px;
-    }
-    .order-info-addre{
-        font-size: 13px;
-        color: #A1A1A1;
-        line-height: 18px;
-        height: 18px;
-        
-    }
-    .order-info-phone{
-        position: absolute;
-        right: 10px;
-        top: 0px;
-        
-    }
-    .order-time{
-        flex-direction:row;        
-        border-bottom: 1px solid #EDEDED;  
-        padding-bottom: 5px;     
-    }
-    .orer-time-tirp,.order-pay-tirp{
-        color: #A1A1A1;
-        font-size: 13px;
-        line-height: 18px;
-    }
-    .order-time-date,.order-pay-cny{
-        color: #000;
-        font-size: 13px;
-        line-height: 18px;
-    }
-    .order-wait,.order-courier{
-        flex-direction: row;
-        padding-top: 5px;
-        width: 100%;
-    }
-    
-    .order-wait-time{
-        font-size: 24px;
-        color: #AD7057 ;
-        line-height: 33px;
-        padding: 0 4px 0 4px;
-    }
-    .order-wait-fa{
-        line-height: 33px;
-        font-size: 13px;
-        color: #A1A1A1;
-    }
-    .order-wait-fb{
-        line-height: 33px;
-        font-size: 13px;
-        color: #000000;        
-    }
-    .order-wait-fc{
-        line-height: 33px;
-        font-size: 13px;
-        color: #AD7057;
-        padding: 0 4px 0 4px;
-    }
-   .order-wait-number,.order-wait-staus{
-       flex-direction: row;
-       position: absolute;      
-       right: 10px;
-       top: 5px;       
-   }
-   .pl4{
-       padding: 0 4px;
-   }
-  
-   .menu-list-name{
-       font-size: 13px;
-       line-height: 20px;
-   }
-   .menu-list-number{
-       position: absolute;
-       height: 20px;
-       right: 10px;
-       top: 0px;
-       width: 40px;
-       font-size: 13px;
-       line-height: 20px;
-       text-align: right;
-   }
-   .red{
-       color: #D10028 ;
-   }
-   .menu-remark{
-       flex-direction: row;
-       background-color: #F6F6F6 ;
-       padding: 5px 8px;
-       margin: 5px 0px 8px;
-   }
-   .menu-remark-fa{
-       font-size: 13px;
-       color: #A1A1A1;
-   }
-   .menu-remark-fb{
-       font-size: 13px;
-   }
-   .order-pay{
-       flex-direction: row;
-       position: absolute;
-       right: 10px;
-       top: 0px;
-       width: 120px;
-       align-items: flex-end;
-   }
-   .order-operate{
-       flex-direction: row;
-       text-align: center;
-       padding: 10px 0;
-   }
-   .order-operate-btn1{
-       width: 166px;
-       height: 34px;
-       border: 1px solid #EBEBEB;
-       border-radius: 17px; 
-       margin: 0 5px 0 5px;           
-   }
-   .order-operate-btn2 {
-       width: 166px;
-       height: 34px;
-       border: 1px solid #D10028;
-       border-radius: 17px;        
-       background-color: #D10028;  
-       color: #FFFFFF; 
-       margin: 0 5px 0 5px;   
-   }
 </style>

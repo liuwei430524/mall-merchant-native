@@ -186,7 +186,7 @@ export default {
     width: 100px;
     right: 20px;
     top:170px;
-    text-align: right;
+    text-align: center;
     font-family: PingFangSC-Regular;
     font-size: 14px;
     color: #D10028;

@@ -3,7 +3,7 @@
         <status-bar-view></status-bar-view>
         <view class="nav-header">
             <view class="nav-header-button nav-left-button" onclick={this.props.onLeftButton ? this.props.onLeftButton : this.onLeftButton}>
-                <image width={this.props.leftButtonWidth ? this.props.leftButtonWidth : 11} src={this.props.leftButtonIcon ? this.props.leftButtonIcon : '../../image/back.png'} mode="widthFix"></image>
+                <image width={this.props.leftButtonWidth ? this.props.leftButtonWidth : 24} src={this.props.leftButtonIcon ? this.props.leftButtonIcon : '../../icon/icon_outliend_back.png'} mode="widthFix"></image>
                 <text class="nav-header-text">{this.props.leftButtonText}</text>
             </view>
             <text class="nav-header-title">{this.props.title}</text>
@@ -27,7 +27,7 @@ export default {
 </script>
 <style scoped>
     .nav-container {
-        background-color: #FFFFFF;
+        /* background-color: #FFFFFF; */
     }
     .nav-header {
         flex-direction: row;
@@ -37,9 +37,9 @@ export default {
         height: 44px;
     }
     .nav-header-title {
-        color: #fff;
-        font-size: 18px;
-        font-weight: bold;
+        font-family: PingFangSC-Regular;
+        font-size: 17px;
+        color: #000000;
     }
     .nav-header-button {
         flex-direction: row;
@@ -59,7 +59,8 @@ export default {
         padding-right: 10px;
     }
     .nav-header-text {
-        color: #fff;
+        font-family: PingFangSC-Regular;
         font-size: 17px;
+        color: #000000;
     }
 </style>
