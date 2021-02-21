@@ -6,84 +6,100 @@
             </view>
             <text class="hi">您好，</text>
             <text class="msg">欢迎使用云客来登录</text>
-            <view class="container">
-                <input id="username" class="input" placeholder="请输入账号"/>
-                <input id="password" class="input" type="password" placeholder="密码"/>
-                <input id="identifyCode" class="input" placeholder="请输入验证码"/>
-                <text class="btnIdentifyCode">获取验证码</text>
-                <text class="btn" onclick={this.fnLogin}>登录</text>
-                <image class="icon username" src="../../icon/login_icon1.png"></image>
-                <image class="icon password" src="../../icon/login_icon2.png"></image>
-                <image class="icon password_eye" src="../../icon/login_icon3.png"></image>
-                <image class="icon identity" src="../../icon/login_icon4.png"></image>
-                <text class="icon tip" onclick={this.fnGetBack}>忘记密码?</text>
-            </view>
+            <form onsubmit={this.onsubmit}>
+                <view class="item">
+                    <input id="username" name="username" class="input" placeholder="请输入账号"/>
+                    <image class="icon username" src="../../icon/login_icon1.png"></image>
+                </view>
+                <view class="item">
+                    <input id="password" name="password" class="input" type="password" placeholder="密码"/>
+                    <image class="icon password" src="../../icon/login_icon2.png"></image>
+                    <image class="icon password_eye" src="../../icon/login_icon3.png"></image>
+                </view>
+                <view v-if="identityCodeVisible" class="item" >
+                    <input id="identifyCode" name="identifyCode" class="input" placeholder="请输入验证码"/>
+                    <text class="btnIdentifyCode" onclick={this.fnGetIdentifyCode}>获取验证码</text>
+                    <image class="icon identity" src="../../icon/login_icon4.png"></image>
+                </view>
+                <button class="btn" type="submit">登录</button>
+                <view class="item">
+                    <text class="tip" onclick={this.fnGetBack}>忘记密码?</text>
+                </view>
+            </form>
         </scroll-view>
     </view>
 </template>
 <script>
+import $kn from "../../script/kn.js"
 export default {
     name: "login",
     apiready() {
         //like created
+        // document.getElementById('username').focus();
+        var tokenInfo = $kn.getTokenInfo()
+        if(tokenInfo && tokenInfo != ""){
+            // $kn.toIndex()
+        }
     },
     data() {
         return {
+            identityCodeVisible:false,
             text: "Hello world!",
             dataList: new Array(5).fill("../../image/api_100.png")
         };
     },
     methods: {
-        fnLogin(e){
-            // this.toast('test')
-            var param = {
-				name: 'tab',
-                title: 'tabBar',
-				bgColor:'#fff',
-                slidBackEnabled: false,
-				tabBar: {
-                    index: 1,
-			    	animated: true,
-			    	list: [
-			    		{
-			      			text: "商品",
-                            iconPath: "widget://icon/nav_goods.png",
-			      			selectedIconPath: "widget://icon/nav_goods_on.png"
-			    		}, {
-			      			text: "订单",
-			      			iconPath: "widget://icon/nav_order.png",
-			      			selectedIconPath: "widget://icon/nav_order_on.png"
-			    		}, {
-			      			text: "我的",
-			      			iconPath: "widget://icon/nav_my.png",
-			      			selectedIconPath: "widget://icon/nav_my_on.png"
-			    		}
-			    	],
-			    	frames: [
-						{
-							title: "商品",//tab切换时对应的标题
-							name: "goods",
-							url: "../goods/main.stml",
-							//其他继承自openFrame的参数
-						}, {
-							title: "订单",
-							name: "order",
-							url: "../order/main.stml"
-							//其他继承自openFrame的参数
-						}, {
-							title: "我的",
-							name: "my",
-							url: "../my/main.stml"
-							//其他继承自openFrame的参数
-						}
-					]
-			  	}
+        
+        onsubmit(e) {
+            
+            var that = this;
+            var usernameValue = 'admin';//e.detail.value.username;
+            var passwordValue = '+{:>%TGB^YHN';//e.detail.value.password;
+            if (!usernameValue) {
+                this.toast('请输入用户名');
+                return;
             }
-            try{
-                api.openTabLayout(param);
-            }catch(e){
-                this.toast(e);
+            if (!passwordValue) {
+                this.toast('请输入密码');
+                return;
             }
+            $kn.ajax({
+                url: 'sso/login',
+                method: 'post',
+                cache:'false',
+                data: {
+                    body: {
+                        username: usernameValue,
+                        password: passwordValue
+                    }
+                }
+            }, function (ret, err) {
+                if (ret) {
+                    if (ret.data) {
+                        // 保存Token信息
+                        $kn.setTokenInfo(ret.data);
+                        api.sendEvent({
+                            name: 'onLogin'
+                        });
+                        that.toast('登录成功');
+                        $kn.toIndex()    
+                        // api.closeWin();
+                    } else if(ret.message){
+                        that.toast(ret.message);
+                    }else {
+                        that.toast('登录失败');
+                    }
+                } else {
+                    that.toast('网络错误');
+                }
+            });
+            // this.toast('value='+e.detail.value.username)
+            // this.toast('detail='+JSON.stringify(e.detail))
+            // this.fnRedirectIndex()    
+        },
+
+        fnGetIdentifyCode(e){
+
         },
         fnGetBack(e){
             api.openWin({
@@ -94,24 +110,12 @@ export default {
                 }
             })
         },
-        onsubmit(e) {
-            console.log(JSON.stringify(e.detail));
-        },
-        handleSwiperItemClick(e) {
-            api.toast({
-                msg: "您点击了第" + (e.dataset.index + 1) + "个轮播图"
-            });
-        },
-        handleMenuItemClick(e) {
-            api.toast({
-                msg: "您点击了菜单:" + e.dataset.title
-            });
-        },
         
         toast(msg) {
             api.toast({
                 msg: msg,
-                location: 'middle',
+                duration: 1000*3,
+                location: 'bottom',
                 global: true
             });
         }
@@ -128,10 +132,18 @@ export default {
     flex: 1;
     margin-top: 45px;
 }
-.container {
-    padding: 20px;
+form {
+    /* margin:5px; */
+    padding: 40px 20px;
 }
-
+button {
+    margin:5px;
+}
+.item {
+    flex-direction:row;
+    align-items:center;
+    /* margin: 5px; */
+}
 .logo-box{
     height: 117px;
     line-height: 117px;
@@ -176,19 +188,20 @@ export default {
     font-size: 24px;
     text-align: center;
     border-radius: 8px;
+    width: 100%;
 }
 
 .btn:active {
     opacity: 0.8;
 }
 .icon{position: absolute; width: 22px;height: 22px;}
-.username{left: 20px; top: 30px;}
-.password{left: 20px; top: 100px;}
+.username{left: 0px; top: 10px;}
+.password{left: 0px; top: 10px;}
 .btnIdentifyCode{
     position: absolute; 
     width: 100px;
-    right: 20px;
-    top:170px;
+    right: 10px;
+    top:10px;
     text-align: center;
     font-family: PingFangSC-Regular;
     font-size: 14px;
@@ -196,13 +209,18 @@ export default {
     border: none;
     border-left: 1px solid #ddd;
 }
-.password_eye{right: 20px; top: 100px;}
-.identity{left: 20px; top: 170px;}
-.tip{width:auto;right: 20px; top: 300px;font-family: PingFangSC-Regular;
-font-size: 12px;
-z-index:1000;
-color: #000000;
+.password_eye{right: 10px; top: 10px;}
+.identity{left: 0px; top: 10px;}
+.tip{
+    width:100%;
+    right: 20px; 
+    top: 10px;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    z-index:1000;
+    color: #000000;
+    text-align: right;
 }
-
+.hidden{display: none;}
 
 </style>

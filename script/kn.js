@@ -11,19 +11,32 @@ const $kn = {
         if (!param.headers) {
             param.headers = {};
         }
-        param.headers['x-apicloud-mcm-key'] = 'cZKzX7DabDmYyfez';
+        var tokenInfo = this.getTokenInfo()
+        if (tokenInfo && tokenInfo != ""){
+            param.headers['Authorization']=tokenInfo['tokenHead']+tokenInfo['token']
+        }
+        // param.headers['Authorization']='Bearer%20eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE2MTM5MDk4MDQ3OTAsImV4cCI6MTYxNDUxNDYwNH0.ZFbDx5tM9NmmRGBpGvD1LDi65Silpr4AcwjRANUHrAfrxR3rxa18IdogksgxmTQ8EUK8CnyY45Q-vLKDK7f6rg'
         if (param.data && param.data.body) {
+            param.headers['Accept'] = 'application/json';
             param.headers['Content-Type'] = 'application/json; charset=utf-8';
         }
         if (param.url) {
-            var baseUrl = 'https://a8888888888888-pd.apicloud-saas.com/api/';
+            // var baseUrl = 'https://a8888888888888-pd.apicloud-saas.com/api/';
+            var baseUrl = 'http://49.233.117.149:8083/';
             param.url = baseUrl + param.url;
         }
+
+        // api.toast({
+        //     msg: JSON.stringify(param),
+        //     duration: 1000*3,
+        //     location: 'top',
+        //     global: true
+        // });
         api.ajax(param, (ret, err)=> {
             if (callback) callback(ret, err);
             if (ret) {
                 var status =  ret.status;
-                if (status && status == 4001) {
+                if (status && status == 401) {
                     var didShowLogoutAlert = api.getGlobalData({
                         key: 'didShowLogoutAlert'
                     });
@@ -33,7 +46,7 @@ const $kn = {
                             value: true
                         });
 
-                        this.setUserInfo('');
+                        this.setTokenInfo('');
                         api.alert({
                             msg: '登录已失效，请重新登录'
                         }, function() {
@@ -49,6 +62,69 @@ const $kn = {
                 }
             }
         });
+    },
+    toIndex(){
+        var param = {
+            name: 'tab',
+            title: 'tabBar',
+            bgColor:'#fff',
+            slidBackEnabled: false,
+            tabBar: {
+                index: 1,
+                animated: true,
+                list: [
+                    {
+                          text: "商品",
+                        iconPath: "widget://icon/nav_goods.png",
+                          selectedIconPath: "widget://icon/nav_goods_on.png"
+                    }, {
+                          text: "订单",
+                          iconPath: "widget://icon/nav_order.png",
+                          selectedIconPath: "widget://icon/nav_order_on.png"
+                    }, {
+                          text: "我的",
+                          iconPath: "widget://icon/nav_my.png",
+                          selectedIconPath: "widget://icon/nav_my_on.png"
+                    }
+                ],
+                frames: [
+                    {
+                        title: "商品",//tab切换时对应的标题
+                        name: "goods",
+                        url: "../goods/main.stml",
+                        //其他继承自openFrame的参数
+                    }, {
+                        title: "订单",
+                        name: "order",
+                        url: "../order/main.stml"
+                        //其他继承自openFrame的参数
+                    }, {
+                        title: "我的",
+                        name: "my",
+                        url: "../my/main.stml"
+                        //其他继承自openFrame的参数
+                    }
+                ]
+              }
+        }
+        try{
+            api.openTabLayout(param);
+        }catch(e){
+            this.toast(e);
+        }
+    },
+    getTokenInfo(){
+        var value = api.getPrefs({
+            key: 'tokenInfo',
+            sync: true
+        });
+        return value?JSON.parse(value):'';
+    },
+    setTokenInfo(tokenInfo){
+        api.setPrefs({
+            key: 'tokenInfo',
+            value: JSON.stringify(tokenInfo)
+        });  
     },
     getUserInfo() {
         var value = api.getPrefs({
