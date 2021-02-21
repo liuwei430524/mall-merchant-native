@@ -89,6 +89,9 @@ export default {
             api.openWin({
                 name: 'getBackPasswordSetup1',
                 url: '../getback/getback_password_step1.stml',
+                animation: {
+                    type: "ripple",
+                }
             })
         },
         onsubmit(e) {

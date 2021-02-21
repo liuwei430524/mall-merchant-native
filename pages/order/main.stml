@@ -367,7 +367,8 @@ export default{
                     wareCount: wareCount
                 },
                 animation: {
-                    type: "fade"
+                    type: "fade",
+                    subType:"from_right",
                 }
             });
         },

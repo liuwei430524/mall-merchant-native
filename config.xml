@@ -15,7 +15,7 @@
     </author>
 
 	<!-- <content src="config.json"/> -->
-    <content src="pages/main/main.stml" />
+    <content src="pages/login/login.stml" />
 
     <access origin="*" />
 
