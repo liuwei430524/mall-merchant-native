@@ -28,7 +28,7 @@ const $kn = {
 
         // api.toast({
         //     msg: JSON.stringify(param),
-        //     duration: 1000*3,
+        //     duration: 1000*10,
         //     location: 'top',
         //     global: true
         // });

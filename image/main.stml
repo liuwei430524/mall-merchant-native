@@ -4,9 +4,8 @@
         <status-bar-view></status-bar-view>
         <view class="header-nav">
             <view class="header-left" onclick="fnOpenCitySelectorFrame();">
-				<text class="header-left-shop" id="shop">{this.data.shopName}</text>
+				<text class="header-left-shop" id="shop">湘中人家(北区店)</text>
                 <image class={this.data.citySelectorOpened?'header-left-arrow header-left-arrow-active':'header-left-arrow'} src="../../icon/icon_arrow_down1@3x.png"></image>
-				<!-- <text class="header-left-shop" id="shop">湘中人家(北区店)</text> -->
 				<!-- <text class="header-left-city" id="city" >{this.data.cityName}</text> -->
             </view>
             <text class="header-title"></text>
@@ -22,63 +21,183 @@
             <text class="advice-bags">8</text>
         </view>
     </view>
-
+    
 
     <scroll-view class="nav" scroll-x='true' show-scrollbar="false">
-        <text class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} v-for="(item,index) in wareTypeList" data-index={index} onclick={this.fnSetNavMenuIndex}>{item.label}({item.size})</text>
+        <text class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} v-for="(item,index) in wareTypeList" data-index={index} onclick={this.fnSetNavMenuIndex}>{item.label}(8)</text>
     </scroll-view>
     <scroll-view scroll-y='true' class="warelist" enable-back-to-top refresher-enabled refresher-triggered={this.data.refresherTriggered} onrefresherrefresh={this.onrefresherrefresh} onscrolltolower={this.onscrolltolower}>
-        
-        <view v-for="(item, index) in dataList" class="order-part" data-id={item.id} data-wareCount={item.wareCount} onclick={this.fnOpenDetailWin}>
-            <view class="order-info">
-                    <text class="order-info-number">{item.daySn}</text>
+        <view class="header">
+            <image class="banner" src={this.data.bannerUrl} placeholder="../../image/default_rect.png" thumbnail="false" mode="widthFix">
+        </view>
+        <view>
+            <view class="cell" v-for="(item, index) in dataList">
+                <view data-id={item.id} data-wareCount={item.wareCount} class="container" onclick={this.fnOpenDetailWin}>
+                    <view class="container-header">
+                        <text class="no">8</text>
+                        <view class="info">
+                            <text class="info-name">张(女士)</text>
+                        </view>
+                    </view>
+                    <!-- <image class="thumbnail" src={item.thumbnail} placeholder="../../image/default_square.png"></image>
+                    <view class="info">
+                        <text class="info-name">{item.name + ' ' + (item.unit||'')}</text>
+                        <text class="info-description">{item.description}</text>
+                        <text class="info-price">{'￥'+item.price}</text>
+                        <text class="info-origin-price">{'￥'+item.originPrice}</text>
+                    </view>
+                    <view class="control">
+                        <image class={item.wareCount>0?'minus':'none'} data-index={index} src="../../image/minus.png" onclick={this.fnMinus}>
+                        <text class={item.wareCount>0?'count':'none'}>{item.wareCount}</text>
+                        <image class="add" data-index={index} src="../../image/add.png" onclick={this.fnAdd}>
+                    </view> -->
+                </view>
+            </view>
+        </view>
+        <scroll-view scroll-y='true' class="warelist" >
+            <view class="order-part">
+               <view class="order-info">
+                    <text class="order-info-number">8</text>
                     <view class="order-info-person">
-                        <text class="order-info-name">{item.consignee}</text>
-                        <text class="order-info-addre">{item.deliveryPoiAddress}·{item.deliveryDistance/1000}公里</text>
+                        <text class="order-info-name">邹（女士）</text>
+                        <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
                     </view>
-                    <view class="order-info-phone" data-num={item.receiverPhone} onclick={this.fnCall}>
-                        <image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
+                    <view class="order-info-phone">
+                        <image src="../../image/iphone.png" width="24" height="24">电话</image>
                     </view>                    
-            </view>
-            <view class="menu-box">
-                    <order-list-view v-if="currentIndex==0" v-bind:text="item.orderItemsJSON"></order-list-view>
-                    <view class="menu-remark">                        
-                        <text class="menu-remark-fb">备注: {item.note}</text>
+               </view>
+               <view class="menu-box">
+                    <view class="menu-list">
+                        <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
                     </view>
-            </view>
-            <view class="order-time">
+                    <view class="menu-list">
+                        <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
+                    </view>
+                    <view class="menu-list">
+                        <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
+                    </view>
+                    <view class="menu-list">
+                        <text class="menu-list-name">小碗菜必选白米饭</text><text class="menu-list-number red">X 4</text>
+                    </view>
+                    <view class="menu-list">
+                        <text class="menu-list-name">餐具</text><text class="menu-list-number red">X 2</text>
+                    </view>
+                    <view class="menu-remark">                        
+                        <text class="menu-remark-fb">备注 @商家 麻烦饭菜分量多打点，一点肥肉不要，菜品要新鲜，辣椒放少许 顾客需要1份餐具</text>
+                    </view>
+               </view>
+               <view class="order-time">
                     <text class="orer-time-tirp">要求送达：</text>
-                    <text class="order-time-date">{item.fmtDeliverTime||''}</text>
+                    <text class="order-time-date">11-19 17:41</text>
                     <view class="order-pay">
                         <text class="order-pay-tirp">实付：</text>
-                        <text class="order-pay-cny">￥{item.payAmount}</text>
+                        <text class="order-pay-cny">￥97.39</text>
                     </view>
+               </view>
+               <view class="order-operate">
+                    <button class="order-operate-btn1">打印</button>
+                    <button class="order-operate-btn2">配送下单</button>
+               </view>               
             </view>
-            <view class="order-operate">
-                    <button class="order-operate-btn1" onclick={this.fnPrint}>打印</button>
-                    <button class="order-operate-btn2" onclick={this.fnDelivery}>配送下单</button>
-            </view>               
-        </view>
-        
+            
+            <view class="order-part">
+               <view class="order-info">
+                    <text class="order-info-number">8</text>
+                    <view class="order-info-person">
+                        <text class="order-info-name">邹（女士）</text>
+                        <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
+                    </view>
+                    <view class="order-info-phone">
+                        <image src="../../image/iphone.png" width="24" height="24">电话</image>
+                    </view>                    
+               </view>
+               <view class="order-time">
+                    <text class="orer-time-tirp">要求送达：</text><text class="order-time-date">11-19 17:41</text>
+               </view>
+               <view class="order-courier ">                    
+                    <text class="order-wait-fb">[自配送]</text>
+                    <text class="order-wait-fb pl4">李峰</text>
+                    <text class="order-wait-fa">173****2321</text>
+                    <view class="order-wait-number">                        
+                        <text class="order-wait-fc">配送中·</text>                        
+                    </view>
+               </view>               
+            </view>
+
+            <view class="order-part">
+               <view class="order-info">
+                    <text class="order-info-number">10</text>
+                    <view class="order-info-person">
+                        <text class="order-info-name">邹（女士）</text>
+                        <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
+                    </view>
+                    <view class="order-info-phone">
+                        <image src="../../image/iphone.png" width="24" height="24">电话</image>
+                    </view>                    
+               </view>
+               <view class="order-time">
+                    <text class="orer-time-tirp">要求送达：</text><text class="order-time-date">11-19 17:41</text>
+               </view>
+               <view class="order-wait">
+                    <text class="order-wait-fa">已等候</text>
+                    <text class="order-wait-time">60</text>
+                    <text class="order-wait-fa">分钟</text>
+                    <view class="order-wait-number">
+                        <text class="order-wait-fa">第</text>
+                        <text class="order-wait-fc">1</text>
+                        <text class="order-wait-fa">次下单</text>
+                        <text class="order-wait-fb">[自配送]</text>
+                    </view>
+               </view>               
+            </view>
+
+            <view class="order-part">
+               <view class="order-info">
+                    <text class="order-info-number">101</text>
+                    <view class="order-info-person">
+                        <text class="order-info-name">邹（女士）</text>
+                        <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
+                    </view>
+                    <view class="order-info-phone">
+                        <image src="../../image/iphone.png" width="24" height="24">电话</image>
+                    </view>                    
+               </view>
+               <view class="order-time">
+                    <text class="orer-time-tirp">要求送达：</text><text class="order-time-date">11-19 17:41</text>
+               </view>
+               <view class="order-wait">
+                    <text class="order-wait-fa">已等候</text>
+                    <text class="order-wait-time">60</text>
+                    <text class="order-wait-fa">分钟</text>
+                    <view class="order-wait-number">
+                        <text class="order-wait-fa">第</text>
+                        <text class="order-wait-fc">1</text>
+                        <text class="order-wait-fa">次下单</text>
+                        <text class="order-wait-fb">[自配送]</text>
+                    </view>
+               </view>               
+            </view>
+        </scroll-view>
         <view class="footer">
             <text class="loadDesc">{this.data.haveMoreData?'加载中...':'没有啦！'}</text>
         </view>
     </scroll-view>
-    <!-- <view class="minicart">
+    <view class="minicart">
         <minicart></minicart>
-    </view> -->
+    </view>
     <view class="cityselect" v-if="citySelectorOpened">
         <cityselector onresult="oncityselector"></cityselector>
     </view>
   </view>
+     
+ 
 </template>
+
 <script>
 import $kn from "../../script/kn.js";
-// import '../../components/minicart_frame.stml';
+import '../../components/minicart_frame.stml';
 import '../../components/status-bar-view.stml';
 import '../cityselector/cityselector.stml';
-import '../../components/order-list-view.stml';
-
 export default{
     name:'main',
     data() {
@@ -86,8 +205,6 @@ export default{
             citySelectorOpened: false,
             cityName:'北京',
             cityDataList: [],
-            shopName:'全部',
-            // shopName:'湘中人家(北区店)',
             wareTypeList:[
                 {name: 'confirm', label: '新订单', size: null},
                 {name: 'delivery', label: '待抢单', size: null},
@@ -99,6 +216,7 @@ export default{
             currentIndex:0,
             frames:[],
             dataList: [],
+            bannerUrl: '',
             skip: 0,
             haveMoreData: true,
             refresherTriggered: false,
@@ -109,23 +227,6 @@ export default{
         fnSearch(){this.toast('search')},
         fnNewOrder(){this.toast('add')},
         fnMessage(){this.toast('message')},
-        fnPrint(e){
-            e.stopPropagation && e.stopPropagation();
-            this.toast('print')
-        },
-        fnDelivery(e){
-            e.stopPropagation && e.stopPropagation();
-            this.toast('delivery')
-        },
-        fnCall(e){
-            e.stopPropagation && e.stopPropagation();
-            var phone = e.currentTarget.dataset.num;
-            this.toast('call')
-            api.call({
-                type: 'tel_prompt',
-                number: phone
-            });
-        },
         apiready(){
             if (api.setStatusBarStyle) {
                 api.setStatusBarStyle({
@@ -135,23 +236,24 @@ export default{
             this.initEventListenner();
 
             // 从缓存中获取上一次选择的城市信息
-            // var currentCity = $kn.getCurrentCityInfo();
-            // if (!currentCity) {
-            //     this.fnOpenCitySelectorFrame();
-            //     return;
-            // }
+            var currentCity = $kn.getCurrentCityInfo();
+            if (!currentCity) {
+                this.fnOpenCitySelectorFrame();
+                return;
+            }
             
             // 更新界面上显示的城市名称
-            // this.data.cityName = currentCity.name;
+            this.data.cityName = currentCity.name;
 
             // 从服务器端更新商品分类列表
-            this.fnGetWareTypeList();
-            // this.updatedWareList()
+            // this.fnGetWareTypeList();
+            this.updatedWareList()
         },
         updatedWareList(){
             if (this.data.wareTypeList.length > 0) {
                 var wareType = this.data.wareTypeList[this.data.currentIndex];
-                this.data.wareTypeId = wareType.name=='全部'?'':wareType.name;
+                this.data.bannerUrl = wareType.banner;
+                this.data.wareTypeId = wareType.name=='全部'?'':wareType.id;
                 this.data.refresherTriggered = true;
                 this.fnGetWareList(false);
             }
@@ -160,16 +262,15 @@ export default{
         fnGetWareTypeList() {
             var that = this;
             $kn.ajax({
-                url: 'order/environment',
+                url: 'wareTypes/getWareTypeList',
                 cache: true
             }, function(ret, err) {
                 if (ret && ret.data) {
-                    that.data.shopName = ret.data.shopName;
-                    that.data.wareTypeList = ret.data.status;
+                    that.data.wareTypeList = ret.data;
                     that.updatedWareList();
                 } else {
                     api.toast({
-                        msg: '获取订单数据失败',
+                        msg: '获取商品分类失败',
                         duration: 2000,
                         location: 'bottom'
                     });
@@ -213,11 +314,11 @@ export default{
             var that = this;
             
             // 监听updateShoppingCart事件（自定义），更新购物车信息
-            // api.addEventListener({
-            //     name: 'updateShoppingCart'
-            // }, function(ret, err) {
-            //     that.updateShoppingCart(ret.value);
-            // });
+            api.addEventListener({
+                name: 'updateShoppingCart'
+            }, function(ret, err) {
+                that.updateShoppingCart(ret.value);
+            });
 
             // 拦截Android的返回键，在首页点击返回键，提示退出应用
             api.addEventListener({
@@ -265,6 +366,21 @@ export default{
             }
         },
 
+        fnOpenPersonalCenterWin() {
+            var userInfo = $kn.getUserInfo();
+            if (userInfo && userInfo.id) {
+                api.openWin({
+                    name: 'personalcenter',
+                    url: '../personalcenter/personalcenter.stml'
+                });
+            } else {
+                // 没有登录，打开登录Window
+                api.openWin({
+                    name: 'login',
+                    url: '../login/login.stml'
+                });
+            }
+        },
         onrefresherrefresh(){
             this.data.refresherTriggered = true;
             this.fnGetWareList(false);
@@ -272,7 +388,7 @@ export default{
         // 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
         fnGetWareList(loadMore_) {
             // 如果是加载更多，需要实现分页
-            var limit = 10;
+            var limit = 20;
             if (loadMore_) {
                 this.data.skip += limit;
             } else {
@@ -283,25 +399,26 @@ export default{
             var that = this;
             // 根据城市和商品分类获得相应的商品列表
             $kn.ajax({
-                url: 'order/list',
+                url: 'wares/getWareList',
+                method: 'post',
                 data: {
                     body: {
-                        shopId: currentCity?currentCity.id:'',
-                        type: this.data.wareTypeId,
-                        pageNum: this.data.skip,
-                        pageSize: limit
+                        supportAreaId: currentCity?currentCity.id:'',
+                        wareTypeId: this.data.wareTypeId,
+                        skip: this.data.skip,
+                        limit: limit
                     }
                 }
             }, function(ret, err) {
-                // api.alert({msg:'ret='+JSON.stringify(ret)+', err='+JSON.stringify(err)},function(ret){   
-                // })
                 if (ret && ret.data) {
+                    var cartData = api.getGlobalData({key: 'cartInfo'});
                     var data = ret.data;
-                    that.data.haveMoreData = data.list.length == limit;
+                    that.data.haveMoreData = data.length == limit;
+                    that.getFixedWareList(data, cartData?cartData.wareList:null);
                     if (loadMore_) {
-                        that.data.dataList = that.data.dataList.concat(data.list);
+                        that.data.dataList = that.data.dataList.concat(data);
                     } else {
-                        that.data.dataList = data.list;
+                        that.data.dataList = data;
                     }
                 } else {
                     api.toast({
@@ -338,15 +455,14 @@ export default{
             var wareCount = e.currentTarget.dataset.wareCount;
             
             api.openWin({
-                name: 'orderDetail',
-                url: './detail.stml',
+                name: 'ware'+id,
+                url: '../ware/ware.stml',
                 pageParam: {
                     wareId: id,
                     wareCount: wareCount
                 },
                 animation: {
-                    type: "fade",
-                    subType:"from_right",
+                    type: "fade"
                 }
             });
         },
@@ -430,10 +546,10 @@ export default{
 
     .header-left-arrow {
         width: 13px;
-        height: 18px;
+        height: 8px;
         transition-property: transform;
         transition-duration: 200ms;
-        transform: rotate(0); 
+        transform: rotate(0);
     }
 
     .header-left-arrow-active {
@@ -444,7 +560,7 @@ export default{
         font-family: PingFangSC-Semibold;
         font-size: 17px;
         color: #000000;
-        max-width: 100%;
+		width: 100%;
 	}
 
     .header-left-city {
@@ -539,8 +655,8 @@ export default{
     }
 
     .cell {
-        /* min-height: 280px;
-        padding: 0 8px; */
+        height: 130px;
+        padding: 0 8px;
     }
 
     .container {

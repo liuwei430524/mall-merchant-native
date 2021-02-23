@@ -1,0 +1,45 @@
+<template>
+    <view class="page">
+		<view v-for="(citem,cindex) in orderItems" class="menu-list">
+			<text class="menu-list-name">{citem.productName}</text><text class="menu-list-number">X {citem.productQuantity}</text>
+		</view>
+    </view>
+</template>
+<script>
+	export default {
+		name: 'order-list-view',
+		props:{
+			text:String,
+		},
+		data(){
+			return{
+				orderItems:[]
+			}
+		},
+		methods:{
+			installed() {
+				this.data.orderItems = JSON.parse(this.props.text)
+			},
+		}
+	}
+</script>
+<style>
+    .page {
+        /* height: 100%; */
+    }
+
+   .menu-list-name{
+       font-size: 13px;
+       line-height: 20px;
+   }
+   .menu-list-number{
+       position: absolute;
+       height: 20px;
+       right: 10px;
+       top: 0px;
+       width: 40px;
+       font-size: 13px;
+       line-height: 20px;
+       text-align: right;
+   }
+</style>
