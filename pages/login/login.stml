@@ -38,7 +38,7 @@ export default {
         // document.getElementById('username').focus();
         var tokenInfo = $kn.getTokenInfo()
         if(tokenInfo && tokenInfo != ""){
-            // $kn.toIndex()
+            $kn.toIndex()
         }
     },
     data() {

@@ -1,4 +1,4 @@
-<template name='orderDetail'>
+<template>
     <view class="order">
             <status-bar-view></status-bar-view>
 			<view class="order-nav">
@@ -8,227 +8,152 @@
 				<text class="order-nav-title">订单详情</text>	
 			</view>
             <scroll-view  class="order-staus" scroll-x="true">
-                <view class="order-staus-item">
-                    <text class="order-staus-name order-staus-selected">订单详情</text>
+                <view class="order-staus-item" onclick={this.fnNavClick} data-name="content">
+                    <text class={"order-staus-name"+(this.data.navActive=='content' ? ' order-staus-selected':'')}>订单详情</text>
                 </view>
-                <view class="order-staus-item">
-                    <text class="order-staus-name">配送跟踪</text>
+                <view class="order-staus-item" onclick={this.fnNavClick} data-name="tracking">
+                    <text class={"order-staus-name"+(this.data.navActive=='tracking' ? ' order-staus-selected':'')}>配送跟踪</text>
                 </view>
-                <view class="order-staus-item">
-                    <text class="order-staus-name">用户申请</text>
+                <view class="order-staus-item" onclick={this.fnNavClick} data-name="user">
+                    <text class={"order-staus-name"+(this.data.navActive=='user' ? ' order-staus-selected':'')}>用户申请</text>
                 </view>                
             </scroll-view> 
 
             <!--> 以下内容是用户申请</!-->
-            <scroll-view class="user dn" scroll-y="true">
+            <scroll-view class={"user"+(this.data.navActive=='user' ? '':' dn')} scroll-y="true">
                 <view class="distributor-step">
-                        <view class="distributor-step-box">
-                            <view class="step-start"></view>
+                        <view v-for="ritem,rindex in refunds" class="distributor-step-box">
+                            <view class={rindex==0?'step-start':'step-end'}></view>
                             <view class="step">
-                                <text class="step-info">抢单成功 · 09:25</text>
-                                <text class="step-info">配送员：李峰</text>
-                                <text class="step-info">联系方式：17370072321</text>
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">骑手到店 · 09:36</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
-                                <text class="distributor-step-link">位置 〉</text>
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
-                                <text class="distributor-step-link">位置 〉</text>
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
-                                <text class="distributor-step-link">位置 〉</text>
+                                <text class="step-info-title">{fmtRefundStatus(ritem.refundStatus)}·{this.fmtDate(ditem.addTime,'hh:mm')}</text>
+                                <text class="step-info">原因：{ritem.reason}</text>
                             </view>
                         </view>
                     </view>    
             </scroll-view>
 
             <!--> 以下内容是配送跟踪</!-->
-            <scroll-view class="tracking dn" scroll-y="true">
-                <view class="distributor-box">
+            <scroll-view class={"tracking"+(this.data.navActive=='tracking' ? '':' dn')} scroll-y="true">
+                
+                <view v-for="(ditem,dindex) in deliveries" class="distributor-box">
                     <view class="distributor">
                         <view class="distributor-img">
-                            <image src="../../image/icon_ZPS@2x.png" width="24" height="24"></image>
+                            <image src={'../../image/icon_'+(ditem.logisticTag)+'@2x.png'} width="24" height="24"></image>
                         </view>
                         <view >
-                            <text class="distributor-number">【自配送】第1次下单</text>
-                            <text class="distributor-time">9:23</text>
+                            <text class="distributor-number">【{ditem.logisticName}】第{dindex+1}次下单</text>
+                            <text class="distributor-time">{this.fmtDate(ditem.addTime,'hh:mm')}</text>
                         </view>
-                        <text class="distributor-staus">已取消 ·</text>
-                    </view>
-                </view>
-                <view class="distributor-box">
-                    <view class="distributor">
-                        <view class="distributor-img">
-                            <image src="../../image/icon_ss@2x.png" width="24" height="24"></image>
-                        </view>
-                        <view >
-                            <text class="distributor-number">【闪送】第2次下单</text>
-                            <text class="distributor-time">9:23</text>
-                        </view>
-                        <text class="distributor-staus">已取消 ·</text>
-                    </view>
-                </view>
-                <view class="distributor-box">
-                    <view class="distributor">
-                        <view class="distributor-img">
-                            <image src="../../image/icon_dd@2x.png" width="24" height="24"></image>
-                        </view>
-                        <view >
-                            <text class="distributor-number">【达达】第3次下单</text>
-                            <text class="distributor-time">9:23</text>
-                        </view>
-                        <text class="distributor-staus">派送中 ·</text>
+                        <text class="distributor-staus">{this.fmtDeliverStatus(ditem.status)} ·</text>
                     </view>
                     <view class="distributor-step">
-                        <view class="distributor-step-box">
-                            <view class="step-start"></view>
+                        <view v-for="(nitem,nindex) in ditem.deliveryMessageList" class="distributor-step-box">
+                            <view class={nindex==0?'step-start':'step-end'}></view>
                             <view class="step">
-                                <text class="step-info">抢单成功 · 09:25</text>
-                                <text class="step-info">配送员：李峰</text>
-                                <text class="step-info">联系方式：17370072321</text>
+                                <text class="step-info">{nitem.statusDesc} · {this.fmtDate(nitem.addTime,'hh:mm')}</text>
+                                <text v-if="nitem.deliverTips" class="step-info">{nitem.deliverTips}</text>    
+                                <text v-if="nitem.courierName" class="step-info">配送员：{nitem.courierName}</text>
+                                <text v-if="nitem.courierPhone" class="step-info">联系方式：{nitem.courierPhone}</text>
                             </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">骑手到店 · 09:36</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
+                            <view v-if="nitem.latitude && nitem.longitude" class="distributor-step-addr">
                                 <text class="distributor-step-link">位置 〉</text>
                             </view>
                         </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
-                                <text class="distributor-step-link">位置 〉</text>
-                            </view>
-                        </view>
-                        <view class="distributor-step-box">
-                            <view class="step-end"></view>
-                            <view class="step">
-                                <text class="step-info">派送中 · 09:37</text>
-                                <text class="step-info">配送员已取货，正赶往目的地</text>                                
-                            </view>
-                            <view class="distributor-step-addr">
-                                <text class="distributor-step-link">位置 〉</text>
-                            </view>
-                        </view>
-                    </view>                    
-                </view>                
+                    </view>
+                </view>           
             </scroll-view>
 
             <!--> 以下内容是订单详情</!-->
-            <scroll-view class="content" scroll-y="true">
+            <scroll-view class={"content"+(this.data.navActive=='content' ? '':' dn')} scroll-y="true">
                 <view class="order-part">
 					<view class="order-info">
-                        <text class="order-info-number">8</text>
+                        <text class="order-info-number">{order.daySn}</text>
                         <view class="order-info-person">
-                            <text class="order-info-name">邹（女士）</text>
-                            <text class="order-info-addre">南华大学（求是园5栋604）·1.0公里</text>
+                            <text class="order-info-name">{order.consignee}</text>
+                            <text class="order-info-addre">{order.deliveryPoiAddress}·{order.deliveryDistance/1000}公里</text>
                         </view>
-                        <view class="order-info-phone">
-                            <image src="../../image/iphone.png" width="24" height="24">电话</image>
+                        <view class="order-info-phone" data-num={order.receiverPhone} onclick={this.fnCall}>
+                            <image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
                         </view>                    
                     </view>
-					<view class="menu-box">
-              <view class="menu-list">
-                <text class="menu-list-name">0元饮品一盒【限一盒】</text><text class="menu-list-number">X 1</text>
-              </view>
-              <view class="menu-list">
-                <text class="menu-list-name">小碗菜 | 鱼香茄子</text><text class="menu-list-number">X 1</text>
-              </view>
-              <view class="menu-list">
-                <text class="menu-list-name">小碗菜 | 酸辣大白菜</text><text class="menu-list-number">X 1</text>
-              </view>
-              <view class="menu-list">
-                <text class="menu-list-name">餐具</text><text class="menu-list-number red">X 2</text>
-              </view>
-              <view class="menu-remark">                        
-                <text class="menu-remark-fb">备注 @商家 麻烦饭菜分量多打点，一点肥肉不要，菜品要新鲜，辣椒放少许 顾客需要1份餐具</text>
-              </view>
-            </view>
-			</view>	
-			<view class="order-pay">
-				<text class="order-pay-title">金额信息</text>
-				<view class="order-pay-box">
-						<view class="order-pay-list">
-								<text class="order-pay-name order-pay-fa">配送费</text><text class="order-pay-number">￥2</text>
-						</view>
-						<view class="order-pay-list">
-								<text class="order-pay-name order-pay-fa">餐盒费</text><text class="order-pay-number">￥2</text>
-						</view>	
-						<view class="order-pay-list">
-								<text class="order-pay-name order-pay-fa">顾客实付</text><text class="order-pay-number">￥2444444444</text>
-						</view>	
-						<view class="order-pay-list">
-								<text class="order-pay-name order-pay-fa">商家实收</text><text class="order-pay-number">￥26.45</text>
-						</view>		
-				</view>
-			</view>	
-			<view class="order-detail">
-				<text class="order-detail-title">订单信息</text>
-                <view class="order-detail-box">
-                    <view class="order-detail-list">
-                        <text class="order-detail-name order-pay-fa">要求送达</text><text class="order-detail-number">12-09 16:54</text>
+                    <view class="menu-box">
+                        <view v-for="(iitem,iindex) in items" class="menu-list">
+                            <text class="menu-list-name">{iitem.productName}</text><text class={"menu-list-number"+(iitem.productQuantity>1?' red':'')}>X {iitem.productQuantity}</text>
+                        </view>
+                        <view class="menu-remark">                        
+                            <text class="menu-remark-fb">备注 {order.note}</text>
+                        </view>
                     </view>
-                    <view class="order-detail-list">
-                        <text class="order-detail-name order-pay-fa">配送门店</text><text class="order-detail-number">湘中人家（北区店）</text>
+                </view>	
+                <view class="order-pay">
+                    <text class="order-pay-title">金额信息</text>
+                    <view class="order-pay-box">
+                            <view class="order-pay-list">
+                                    <text class="order-pay-name order-pay-fa">配送费</text><text class="order-pay-number">￥{order.freightAmount}</text>
+                            </view>
+                            <view class="order-pay-list">
+                                    <text class="order-pay-name order-pay-fa">餐盒费</text><text class="order-pay-number">￥{order.packageFee}</text>
+                            </view>	
+                            <view class="order-pay-list">
+                                    <text class="order-pay-name order-pay-fa">顾客实付</text><text class="order-pay-number">￥{order.payAmount}</text>
+                            </view>	
+                            <view class="order-pay-list">
+                                    <text class="order-pay-name order-pay-fa">商家实收</text><text class="order-pay-number">￥{order.income}</text>
+                            </view>		
                     </view>
-                    <view class="order-detail-list">
-                        <text class="order-detail-name order-pay-fa">下单时间</text><text class="order-detail-number">2020-12-09 16:18:26</text>
+                </view>	
+                <view class="order-detail">
+                    <text class="order-detail-title">订单信息</text>
+                    <view class="order-detail-box">
+                        <view class="order-detail-list">
+                            <text class="order-detail-name order-pay-fa">要求送达</text><text class="order-detail-number">{this.fmtDate(order.deliverTime,'MM-dd hh:mm')}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="order-detail-name order-pay-fa">配送门店</text><text class="order-detail-number">{order.thirdShopName}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="order-detail-name order-pay-fa">下单时间</text><text class="order-detail-number">{this.fmtDate(order.createTime,'yyyy-MM-dd hh:mm:ss')}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="order-detail-name order-pay-fa">订单编号</text><text class="order-detail-number">{order.orderSn}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="order-detail-name order-pay-fa">顾客属性</text><text class="order-detail-number red">新客户</text>
+                        </view>                                       
                     </view>
-                    <view class="order-detail-list">
-                        <text class="order-detail-name order-pay-fa">订单编号</text><text class="order-detail-number">692873828372937</text>
-                    </view>
-                    <view class="order-detail-list">
-                        <text class="order-detail-name order-pay-fa">顾客属性</text><text class="order-detail-number red">新客户</text>
-                    </view>                                       
                 </view>
-			</view>
+
+                <view v-for="(ditem, dindex) in deliver" class="order-deliver">
+                    <text class="order-deliver-title">配送信息</text>
+                    <view class="order-deliver-box">
+                        <view class="order-detail-list">
+                            <text class="menu-list-name order-pay-fa">配送方式</text><text class="order-deliver-number">{ditem.logisticName}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="menu-list-name order-pay-fa">配送费用</text><text class="order-deliver-number">￥{ditem.deliveryAmount/100} 元</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="menu-list-name order-pay-fa">骑手姓名</text><text class="order-deliver-number">{ditem.deliverName}</text>
+                        </view>
+                        <view class="order-detail-list">
+                            <text class="menu-list-name order-pay-fa">骑手电话</text>
+
+                            <view class="order-deliver-phone" data-num={ditem.deliverPhone} onclick={this.fnCall}>
+                                <image class="deliver-phone-img" src="../../icon/icon_iphone.png">电话</image>
+                                <text class="deliver-phone-txt">{ditem.deliverPhone}</text>
+                            </view>
+                            
+                        </view>
+                        <view v-if="ditem.endTime" class="order-detail-list">
+                            <text class="menu-list-name order-pay-fa">完成时间</text><text class="order-deliver-number">{this.fmtDate(ditem.endTime,'yyyy-MM-dd hh:mm')}</text>
+                        </view>                                       
+                    </view>
+                </view>
+
             </scroll-view>           
 			
             <!--> 以下内容是订单详情底部操作标签</!-->
-			<view class="order-foot">
+			<view class={"order-foot"+(this.data.navActive=='content' ? '':' dn')}>
 				<view class="order-foot-item">
                     <text class="order-foot-name">取消订单</text>
                 </view>
@@ -244,7 +169,7 @@
 			</view>
 
             <!--> 以下内容是配送跟踪底部操作标签</!-->
-            <view class="tracking-foot dn">
+            <view class={"tracking-foot"+(this.data.navActive=='tracking' ? '':' dn')}>
 				<view class="tracking-foot-item">
                     <text class="tracking-foot-name">全部取消</text>
                 </view>
@@ -257,7 +182,7 @@
 			</view>
 
             <!--> 以下内容是用户申请底部操作标签</!-->
-            <view class="user-foot dn">
+            <view class={"user-foot"+(this.data.navActive=='user' ? '':' dn')}>
 				<view class="user-foot-item">
                     <text class="user-foot-name">拒绝</text>
                 </view>
@@ -270,32 +195,145 @@
 		
 </template>
 <script>
+    import $kn from "../../script/kn.js";
 	export default {
 		name: 'orderDetail',
 		apiready(){//like created
-			api.toast({
-				msg:'come in detail page'
-			})
+
+            // 获取商品详情数据
+            this.getOrderInfo(api.pageParam);
 		},
 		data() {
 			return{
-
+                navActive:'content',
+                order:{
+                    orderSn:'',
+                    daySn:'',
+                    consignee:'',
+                    deliveryPoiAddress:'',
+                    deliveryDistance:0,
+                    receiverPhone:null,
+                    note:'',
+                    freightAmount:0,
+                    packageFee:0,
+                    payAmount:0,
+                    income: 0,
+                    thirdShopName:'',
+                    createTime:null,
+                },
+                items:[],
+                refunds:[],
+                deliveries:[],
+                deliver:[]
 			}
 		},
 		methods: {
+            getOrderInfo(params){
+                // this.toast(JSON.stringify(params))
+                let that = this;
+                $kn.ajax({
+                    url: 'order/records',
+                    data: {
+                        body: params
+                    }
+                }, function(ret, err) {
+                    // api.alert({msg:'ret='+JSON.stringify(ret.data)+', err='+JSON.stringify(err)},function(ret){   
+                    // })
+                    if (ret && ret.data) {
+                        var data = ret.data;
+                        if(data && data.order) that.data.order=data.order;
+                        if(data && data.items) that.data.items=data.items;
+                        if(data && data.refunds) that.data.refunds=data.refunds;
+                        if(data && data.deliveries) {
+                            if(data.deliveries.length>0) that.data.deliver = data.deliveries.slice(0,1)
+                            that.data.deliveries=data.deliveries;
+                        }
+                    } else {
+                        api.toast({
+                            msg: '加载数据失败',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+                
+            },
 
+            fnCall(e){
+                e.stopPropagation && e.stopPropagation();
+                var phone = e.currentTarget.dataset.num;
+                // this.toast('call')
+                api.call({
+                    type: 'tel_prompt',
+                    number: phone
+                });
+            },
+            fnNavClick(e){
+                this.data.navActive=e.currentTarget.dataset.name;
+            },
+
+            fmtDate(e, pattern){
+                if (!e || e==''){
+                    return '';
+                }
+                let timestamp = new Date(e)
+                return $kn.formatDate(timestamp, pattern)
+            },
+            fmtRefundStatus(status){
+                switch(status){
+                    case 0:
+                        return '未申请退单';
+                    case 1:
+                        return '用户申请退单';
+                    case 2:
+                        return '店铺拒绝退单';
+                    case 3:
+                        return '客服仲裁中';
+                    case 4:
+                        return '退单失败';
+                    case 5:
+                        return '退单成功';
+                    default:
+                        return '未知';
+                }
+            },
+            fmtDeliverStatus(status){
+                switch(status){
+                    case 1:
+                        return '待接单';
+                    case 2:
+                        return '待取货';
+                    case 3:
+                        return '配送中';
+                    case 4:
+                        return '已完成';
+                    case 5:
+                        return '已取消';
+                    case 6:
+                        return '骑士到店';
+                    default:
+                        return '未知';
+                }
+            },
+            toast(msg) {
+                api.toast({
+                    msg: msg,
+                    location: 'middle',
+                    global: true
+                });
+            }
 		}
 	}
 </script>
 <style>
-    .page {
+    .order {
 		width: 100%;
         height: 100%;
-		/* background-color: red; */
 	}
     .content,.tracking,.user{
         width: 100%;
-        height:100%;                
+        height:100%;   
+        display: flex;             
     }
 	.dn{
         display: none;
@@ -358,6 +396,11 @@
     .step-info{
         font-size: 13px;
         line-height: 18px;
+    }
+    .step-info-title{
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: bold;
     }
     .step-start{
         width: 16px;
@@ -428,10 +471,10 @@
         background-repeat: no-repeat;
         background-position: bottom;
     }
-	.order-pay,.order-detail{
+	.order-pay,.order-detail,.order-deliver{
 		padding: 15px;
 	}
-	.order-pay-box,.order-detail-box{
+	.order-pay-box,.order-detail-box,.order-deliver-box{
 		padding-top: 10px;
 	}
 	.order-part{
@@ -482,7 +525,26 @@
         top: 0px;
         
     }
-		.menu-remark{
+    .order-deliver-phone{
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        width: 50%;
+        height: 100%;
+    }
+    .deliver-phone-img{
+        position:absolute;
+        left: 30%;
+        height: 20px;
+        width: 20px;
+    }
+    .deliver-phone-txt{
+        position: absolute;
+        right: 0px;
+        width: auto;
+        height: auto;
+    }
+    .menu-remark{
        flex-direction: row;
        background-color: #F6F6F6 ;
        padding: 5px 8px;
@@ -495,14 +557,15 @@
    .menu-remark-fb{
        font-size: 13px;
    }
-	 .menu-list-name,.order-pay-name,.order-detail-name{
+   
+   .menu-list-name,.order-pay-name,.order-detail-name{
        font-size: 13px;
        line-height: 20px;
    }
    .order-pay-fa{
        color: #505050 ;
    }
-   .menu-list-number,.order-pay-number,.order-detail-number{
+   .menu-list-number,.order-pay-number,.order-detail-number,.order-deliver-number{
        position: absolute;
        height: 20px;
        right: 10px;
@@ -517,6 +580,7 @@
    }
    .order-foot,.tracking-foot,.user-foot{
        flex-direction: row;
+       display: flex;
        border-top: 1px solid #eaeaea;
        height: 44px;
    }

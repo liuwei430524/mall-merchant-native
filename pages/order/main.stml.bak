@@ -22,12 +22,71 @@
     </view>
 
 
-    <scroll-view id="nav" class="nav" scroll-x='true' show-scrollbar="false">
-        <text v-for="(nitem,index) in wareTypeList" id={nitem.name} data-index={index} data-name={nitem.name} class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} onclick={this.fnSetNavMenuIndex}>{nitem.label}({nitem.size})</text>
+    <scroll-view class="nav" scroll-x='true' show-scrollbar="false">
+        <text class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} v-for="(nitem,index) in wareTypeList" data-index={index} onclick={this.fnSetNavMenuIndex}>{nitem.label}({nitem.size})</text>
     </scroll-view>
-    
-    <frame-group id="frameGroup" index="0" preload="1" scrollEnabled="true" onchange={this.onFrameGroupChange}></frame-group>
+    <scroll-view scroll-y='true' class="warelist" enable-back-to-top refresher-enabled refresher-triggered={this.data.refresherTriggered} onrefresherrefresh={this.onrefresherrefresh} onscrolltolower={this.onscrolltolower}>
+        
+        <view v-for="(oitem, index) in dataList" class="order-part" data-shop={oitem.thirdShopId} data-id={oitem.id} data-no={oitem.orderSn} data-tag={oitem.channelTag} onclick={this.fnOpenDetailWin}>
 
+            <view class="order-info">
+                <text class="order-info-number">{oitem.daySn}</text>
+                <view class="order-info-person">
+                    <text class="order-info-name">{oitem.consignee}</text>
+                    <text class="order-info-addre">{oitem.deliveryPoiAddress}·{oitem.deliveryDistance/1000}公里</text>
+                </view>
+                <view class="order-info-phone" data-num={oitem.receiverPhone} onclick={this.fnCall}>
+                    <image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
+                </view>                    
+            </view>
+            <view class="menu-box">
+                <!-- <order-list-view v-bind:visible="this.data.currentIndex==0" v-bind:text="item.orderItemsJSON"></order-list-view> -->
+                <view v-for="(citem,cindex) in oitem.orderItems" class="menu-list">
+                    <text class="menu-list-name">{citem.productName}</text><text class={"menu-list-number"+(citem.productQuantity>1?' red':'')}>X {citem.productQuantity}</text>
+                </view>
+                <view class="menu-remark">                        
+                    <text class="menu-remark-fb">备注: {oitem.note}</text>
+                </view>
+            </view>
+            <view class={"order-time"+(oitem.deliverCount>0?' order-time-border':'')}>
+                <text class="orer-time-tirp">要求送达：</text>
+                <text class="order-time-date">{oitem.fmtDeliverTime||''}</text>
+                <view class="order-pay">
+                    <text class="order-pay-tirp">实付：</text>
+                    <text class="order-pay-cny">￥{oitem.payAmount}</text>
+                </view>
+            </view>
+            <view class={"order-operate"+(oitem.processStatus==0?' show':' hidden')}>
+                <button class="order-operate-btn1" onclick={this.fnPrint}>打印</button>
+                <button class="order-operate-btn2" onclick={this.fnDelivery}>配送下单</button>
+            </view>
+            <view v-for="(ditem,dindex) in oitem.deliveries" class={"order-status"+(oitem.processStatus>=1?' show':' hidden')}>
+                <view v-if="ditem.status==1" class="order-status-container">
+                    <view class="order-status-left">
+                        <text class="order-status-font">已经等候</text><text class="order-status-font1">{this.fmtWaitTime(oitem.createTime, ditem.addTime)}</text><text class="order-status-font">分钟</text>
+                    </view>
+                    <view class="order-status-right">
+                        <text class="order-status-font">第</text><text class="order-status-font1">{oitem.deliverCount}</text><text class="order-status-font">次下单</text><text class="order-status-font2">[{ditem.logisticName}]</text>
+                    </view>
+                </view>
+                <view v-if="ditem.status>1" class="order-status-container">
+                    <view class="order-status-left">
+                        <text class="order-status-font2">[{ditem.logisticName}]</text>
+                        <text class="order-status-font2">{ditem.deliverName}</text>
+                        <text class="order-status-font">{ditem.deliverPhone}</text>
+                    </view>
+                    <view class="order-status-right">
+                        <text class="order-status-font3">{this.fmtDeliverStatus(ditem.status)} ·</text>
+                    </view>
+                </view>
+            </view>
+            
+        </view>
+        
+        <view class="footer">
+            <text class="loadDesc">{this.data.haveMoreData?'加载中...':'没有啦！'}</text>
+        </view>
+    </scroll-view>
     <!-- <view class="minicart">
         <minicart></minicart>
     </view> -->
@@ -41,7 +100,7 @@ import $kn from "../../script/kn.js";
 // import '../../components/minicart_frame.stml';
 // import '../../components/status-bar-view.stml';
 import '../cityselector/cityselector.stml';
-// import '../../components/order-list-view.stml';
+import '../../components/order-list-view.stml';
 
 export default{
     name:'main',
@@ -59,18 +118,85 @@ export default{
                 {name: 'expect', label: '配送异常', size: null},
                 {name: 'cancel', label: '取消/退款', size: null},
                 {name: 'remainder', label: '催单', size: null},
-                {name: 'all', label: '全部', size: null},
             ],
             currentIndex:0,
+            frames:[],
             dataList: [],
             page: 1,
             limit: 10,
             haveMoreData: true,
             refresherTriggered: false,
-            wareTypeId: '',
+            wareTypeId: ''
         }
     },
     methods:{
+        fnSearch(){this.toast('search')},
+        fnNewOrder(){this.toast('add')},
+        fnMessage(){this.toast('message')},
+        fnPrint(e){
+            e.stopPropagation && e.stopPropagation();
+            this.toast('print')
+        },
+        fnDelivery(e){
+            e.stopPropagation && e.stopPropagation();
+            this.toast('delivery')
+        },
+        fmtWaitTime(start, end){
+            var date1=new Date(start);    //开始时间
+            var date2=new Date(end);    //结束时间
+            var date3=date2.getTime()-date1.getTime(); //时间差秒
+            //计算出相差天数
+            var days=Math.floor(date3/(24*3600*1000));
+
+            //计算出小时数
+            var leave1=date3%(24*3600*1000);  //计算天数后剩余的毫秒数
+            var hours=Math.floor(leave1/(3600*1000));
+
+            //计算相差分钟数
+            var leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数
+            var minutes=Math.floor(leave2/(60*1000));
+
+            //计算相差秒数
+            var leave3=leave2%(60*1000);     //计算分钟数后剩余的毫秒数
+            var seconds=Math.round(leave3/1000);
+            // var seconds=parseFloat(leave3/1000).toFixed(1) * 10;
+
+            return minutes+':'+seconds;
+            // let stimestamp = new Date(start)
+            // let etimestamp = new Date(end)
+            // var mistiming = Math.round(etimestamp / 1000) - Math.round(stimestamp/1000);
+            // // var inm = Math.floor(mistiming / 3600)
+            // var inm = parseFloat(mistiming / 3600).toFixed(2);
+            // return inm;
+        },
+        fmtDeliverStatus(status){
+            // 1待接单，2待取货，3配送中，4已完成，5已取消，6骑士到店
+            switch(status){
+                case 1:
+                    return '待接单';
+                case 2:
+                    return '待取货';
+                case 3:
+                    return '配送中';
+                case 4:
+                    return '已完成';
+                case 5:
+                    return '已取消';
+                case 6:
+                    return '骑士到店';
+                default:
+                    return '未知';
+            }
+        },
+        fnCall(e){
+            e.stopPropagation && e.stopPropagation();
+            var phone = e.currentTarget.dataset.num;
+            // this.toast('call')
+            api.call({
+                type: 'tel_prompt',
+                number: phone
+            });
+        },
         apiready(){
             if (api.setStatusBarStyle) {
                 api.setStatusBarStyle({
@@ -91,51 +217,67 @@ export default{
 
             // 从服务器端更新商品分类列表
             this.fnGetWareTypeList();
-            this.fnInitFrameGroup()
+            // this.updatedWareList()
         },
-        fnInitFrameGroup(){
-            var frames = [];
-            for (var i=0;i<this.data.wareTypeList.length;i++) {
-                var wareType = this.data.wareTypeList[i];
-                frames.push({
-                    name: wareType.name,
-                    url: './list.stml',
-                    pageParam:{
-                        currentIndex: i
-                    },
-                });
+        updatedWareList(){
+            if (this.data.wareTypeList.length > 0) {
+                var wareType = this.data.wareTypeList[this.data.currentIndex];
+                this.data.wareTypeId = wareType.name=='全部'?'':wareType.name;
+                this.data.refresherTriggered = true;
+                this.fnGetWareList(false);
             }
-            $kn.byId('frameGroup').load({
-                frames: frames
+        },
+        // 从服务器端更新商品分类列表
+        fnGetWareTypeList() {
+            var that = this;
+            $kn.ajax({
+                url: 'order/environment',
+                cache: true
+            }, function(ret, err) {
+                if (ret && ret.data) {
+                    that.data.shopName = ret.data.shopName;
+                    that.data.wareTypeList = ret.data.status;
+                    that.updatedWareList();
+                } else {
+                    api.toast({
+                        msg: '获取订单数据失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
             });
         },
-        fnSetNavMenuIndex(e) {
-            var index = e.target.dataset.index;
-            var name = e.target.dataset.name;
-            if (this.data.currentIndex != index) {
-                this.data.currentIndex = index;
-                $kn.byId('frameGroup').setIndex({
-                    index: index,
-                    scroll: true
-                });
+
+        updateShoppingCart(param){
+            var that = this;
+            var wareId = param.wareId;
+            var wareCount = param.wareCount;
+            var body = {
+                wareId: wareId,
+                wareCount: wareCount
+            };
+            if (param.hasOwnProperty('selected')) {
+                body.selected = param.selected;
             }
+            $kn.ajax({
+                url: 'carts/mod',
+                method: 'post',
+                data: {
+                    body: body
+                }
+            }, function(ret, err) {
+                if (ret && ret.data) {
+                    api.setGlobalData({key:'cartInfo' ,value:ret.data});
+                    api.sendEvent({
+                        name: 'onGetCartInfo',
+                        extra: ret.data
+                    });
+                    if (that.data.dataList && that.data.dataList.length > 0) {
+                        that.getFixedWareList(that.data.dataList, ret.data.wareList);
+                    }
+                }
+            });
         },
-        onFrameGroupChange(e){
-            var index = e.detail.index;
-            var name = e.detail.name;
-            // this.toast(JSON.stringify(e.detail))
-            if (this.data.currentIndex != index) {
-                this.data.currentIndex = index;                
-                $kn.byId('nav').scrollTo({
-                    // view : name
-                    position: (index>2?'lower':'upper')
-                });
-                
-            }
-        },
-        fnSearch(){this.toast('search')},
-        fnNewOrder(){this.toast('add')},
-        fnMessage(){this.toast('message')},
 
         // 初始化事件监听
          initEventListenner() {
@@ -185,32 +327,141 @@ export default{
         fnOpenCitySelectorFrame() {
             this.data.citySelectorOpened = !this.data.citySelectorOpened;
         },
-        
-        // 从服务器端更新商品分类列表
-        fnGetWareTypeList() {
+
+        fnSetNavMenuIndex(e) {
+            var index = e.currentTarget.dataset.index;
+            if (this.data.currentIndex != index) {
+                this.data.currentIndex = index;
+                this.updatedWareList();
+            }
+        },
+
+        onrefresherrefresh(){
+            this.data.refresherTriggered = true;
+            this.fnGetWareList(false);
+        },
+        // 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
+        fnGetWareList(loadMore_) {
+            // 如果是加载更多，需要实现分页
+            if (loadMore_) {
+                this.data.page ++;
+                // this.data.skip += limit;
+            } else {
+                this.data.page = 0;
+            }
+
+            var currentCity = $kn.getCurrentCityInfo();
             var that = this;
+            // 根据城市和商品分类获得相应的商品列表
             $kn.ajax({
-                url: 'order/environment',
-                cache: true
+                url: 'order/list',
+                data: {
+                    body: {
+                        shopId: currentCity?currentCity.id:'',
+                        type: this.data.wareTypeId,
+                        pageNum: this.data.page,
+                        pageSize: this.data.limit
+                    }
+                }
             }, function(ret, err) {
+                // api.alert({msg:'ret='+JSON.stringify(ret)+', err='+JSON.stringify(err)},function(ret){   
+                // })
                 if (ret && ret.data) {
-                    that.data.shopName = ret.data.shopName;
-                    that.data.wareTypeList = ret.data.status;
-                    // that.updatedWareList();
+                    var data = ret.data;
+                    that.data.haveMoreData = data.list.length == that.data.limit;
+                    if (loadMore_) {
+                        that.data.dataList = that.data.dataList.concat(data.list);
+                    } else {
+                        that.data.dataList = data.list;
+                    }
                 } else {
                     api.toast({
-                        msg: '获取订单数据失败',
+                        msg: '加载数据失败',
                         duration: 2000,
                         location: 'bottom'
                     });
                 }
+                that.data.refreshState = 'normal';
+                that.data.refresherTriggered = false;
             });
         },
-
+        getFixedWareList(wareList, cartWareList) {
+            for (var i=0;i<wareList.length;i++) {
+                var item = wareList[i];
+                item.wareCount = 0;
+                if (cartWareList && cartWareList.length > 0) {
+                    for (var j=0;j<cartWareList.length;j++) {
+                        var cartItem = cartWareList[j];
+                        if (cartItem.id == item.id) {
+                            item.wareCount = cartItem.wareCount;
+                        }
+                    }
+                }
+            }
+        },
+        onscrolltolower() {
+            if (this.data.haveMoreData) {
+                this.fnGetWareList(true);
+            }
+        },
+        fnOpenDetailWin(e) {
+            api.openWin({
+                name: 'orderDetail',
+                url: './detail.stml',
+                pageParam: {
+                    orderId: e.currentTarget.dataset.id,
+                    shopId: e.currentTarget.dataset.shop,
+                    orderNo: e.currentTarget.dataset.no,
+                    tag: e.currentTarget.dataset.tag
+                },
+                animation: {
+                    type: "fade",
+                    subType:"from_right",
+                }
+            });
+        },
+        fnMinus(e) {
+            e.stopPropagation && e.stopPropagation();
+            if (!$kn.getUserInfo()) {
+                api.openWin({
+                    name: 'login',
+                    url: '../login/login.stml'
+                });
+                return;
+            }
+            var index = e.currentTarget.dataset.index;
+            var item = this.data.dataList[index];
+            if (item.wareCount > 0) {
+                item.wareCount--;
+                
+                this.updateShoppingCart({
+                    wareId: item.id,
+                    wareCount: item.wareCount
+                });
+            }
+        },
+        fnAdd(e) {
+            e.stopPropagation && e.stopPropagation();
+            if (!$kn.getUserInfo()) {
+                api.openWin({
+                    name: 'login',
+                    url: '../login/login.stml'
+                });
+                return;
+            }
+            var index = e.currentTarget.dataset.index;
+            var item = this.data.dataList[index];
+            item.wareCount++;
+                
+            this.updateShoppingCart({
+                wareId: item.id,
+                wareCount: item.wareCount
+            });
+        },
+        
         toast(msg) {
             api.toast({
                 msg: msg,
-                duration: 1000*10,
                 location: 'middle',
                 global: true
             });
@@ -220,7 +471,6 @@ export default{
 </script>
 <style>
     .main {
-        width: 100%;
         height: 100%;
     }
 
@@ -340,10 +590,6 @@ export default{
         background-image: url(../../image/line-4px.png);
         background-repeat: no-repeat;
         background-position: bottom;
-    }
-
-    #frameGroup {
-        flex: 1;
     }
     .warelist {
         width: 100%;

@@ -1,7 +1,7 @@
 <template>
-    <view class="page">
+    <view class={'menu-list-box'+(this.props.visible ? ' show':' hidden')}>
 		<view v-for="(citem,cindex) in orderItems" class="menu-list">
-			<text class="menu-list-name">{citem.productName}</text><text class="menu-list-number">X {citem.productQuantity}</text>
+			<text class="menu-list-name">{citem.productName}</text><text class={"menu-list-number"+(citem.productQuantity>1?' red':'')}>X {citem.productQuantity}</text>
 		</view>
     </view>
 </template>
@@ -10,6 +10,7 @@
 		name: 'order-list-view',
 		props:{
 			text:String,
+			visible:Boolean,
 		},
 		data(){
 			return{
@@ -18,17 +19,31 @@
 		},
 		methods:{
 			installed() {
-				this.data.orderItems = JSON.parse(this.props.text)
+				if(this.props.text){
+					try{
+						this.data.orderItems = JSON.parse(this.props.text)
+					}catch(e){
+						api.toast({
+							msg: '订单明细数据解析失败, 错误码：'+e,
+							duration: 2000,
+							location: 'bottom'
+						});
+					}
+				}
 			},
 		}
 	}
 </script>
 <style>
-    .page {
+    .menu-list-box {
+		/* width: 340px; */
         /* height: 100%; */
     }
-
+	.menu-list{
+		/* width: 340px; */
+	}
    .menu-list-name{
+	   text-align: left;
        font-size: 13px;
        line-height: 20px;
    }
@@ -41,5 +56,15 @@
        font-size: 13px;
        line-height: 20px;
        text-align: right;
+   }
+
+   .red{
+       color: #D10028 ;
+   }
+   .hidden{
+       display: none;
+   }
+   .show{
+       display:;
    }
 </style>

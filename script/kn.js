@@ -72,6 +72,7 @@ const $kn = {
             tabBar: {
                 index: 1,
                 animated: true,
+                scrollEnabled: false,
                 list: [
                     {
                           text: "商品",
@@ -169,6 +170,43 @@ const $kn = {
         var str = `<img style="max-width:${width}px;"`;
         var result = richtext.replace(/\<img/gi, str);
         return result;
+    },
+    formatDate(date, fmt) {
+        if (/(y+)/.test(fmt)) {
+          fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+        }
+        let o = {
+          'M+': date.getMonth() + 1,
+          'd+': date.getDate(),
+          'h+': date.getHours(),
+          'm+': date.getMinutes(),
+          's+': date.getSeconds()
+        };
+        for (let k in o) {
+          if (new RegExp(`(${k})`).test(fmt)) {
+            let str = o[k] + '';
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : this.padLeftZero(str));
+          }
+        }
+        return fmt;
+    },
+
+    padLeftZero(str) {
+        return ('00' + str).substr(str.length);
+    },
+    beautifyTime(timestamp) {
+        var mistiming = Math.round(new Date() / 1000) - Math.round(timestamp/1000);
+        var postfix = mistiming > 0 ? '前' : '后'
+        mistiming = Math.abs(mistiming)
+        var arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+        var arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+    
+        for (var i = 0; i < 7; i++) {
+            var inm = Math.floor(mistiming / arrn[i])
+            if (inm != 0) {
+                return inm + arrr[i] + postfix
+            }
+        }
     }
 };
 export default $kn;

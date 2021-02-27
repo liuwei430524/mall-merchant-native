@@ -1,0 +1,498 @@
+<template name={this.data.name}>
+    <view class="page">
+		<scroll-view scroll-y='true' class="warelist" enable-back-to-top refresher-enabled refresher-triggered={this.data.refresherTriggered} onrefresherrefresh={this.onrefresherrefresh} onscrolltolower={this.onscrolltolower}>
+			
+			<view v-for="(oitem, index) in dataList" class="order-part" data-shop={oitem.thirdShopId} data-id={oitem.id} data-no={oitem.orderSn} data-tag={oitem.channelTag} onclick={this.fnOpenDetailWin}>
+
+				<view class="order-info">
+					<text class="order-info-number">{oitem.daySn}</text>
+					<view class="order-info-person">
+						<text class="order-info-name">{oitem.consignee}</text>
+						<text class="order-info-addre">{oitem.deliveryPoiAddress}·{oitem.deliveryDistance/1000}公里</text>
+					</view>
+					<view class="order-info-phone" data-num={oitem.receiverPhone} onclick={this.fnCall}>
+						<image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
+					</view>                    
+				</view>
+				<view class="menu-box">
+					<view v-for="(citem,cindex) in oitem.orderItems" class="menu-list">
+						<text class="menu-list-name">{citem.productName}</text><text class={"menu-list-number"+(citem.productQuantity>1?' red':'')}>X {citem.productQuantity}</text>
+					</view>
+					<view class="menu-remark">                        
+						<text class="menu-remark-fb">备注: {oitem.note}</text>
+					</view>
+				</view>
+				<view class={"order-time"+(oitem.deliverCount>0?' order-time-border':'')}>
+					<text class="orer-time-tirp">要求送达：</text>
+					<text class="order-time-date">{oitem.fmtDeliverTime||''}</text>
+					<view class="order-pay">
+						<text class="order-pay-tirp">实付：</text>
+						<text class="order-pay-cny">￥{oitem.payAmount}</text>
+					</view>
+				</view>
+				<view class={"order-operate"+(oitem.processStatus==0?' show':' hidden')}>
+					<button class="order-operate-btn1" onclick={this.fnPrint}>打印</button>
+					<button class="order-operate-btn2" onclick={this.fnDelivery}>配送下单</button>
+				</view>
+				<view v-for="(ditem,dindex) in oitem.deliveries" :key="dindex" class={"order-status"+(oitem.processStatus>=1?' show':' hidden')}>
+					<view v-if="ditem.status==1" class="order-status-container">
+						<view class="order-status-left">
+							<text class="order-status-font">已经等候</text><text class="order-status-font1">{this.fmtWaitTime(oitem.createTime, ditem.addTime)}</text><text class="order-status-font">分钟</text>
+						</view>
+						<view class="order-status-right">
+							<text class="order-status-font">第</text><text class="order-status-font1">{oitem.deliverCount}</text><text class="order-status-font">次下单</text><text class="order-status-font2">[{ditem.logisticName}]</text>
+						</view>
+					</view>
+					<view v-if="ditem.status>1" class="order-status-container">
+						<view class="order-status-left">
+							<text class="order-status-font2">[{ditem.logisticName}]</text>
+							<text class="order-status-font2">{ditem.deliverName}</text>
+							<text class="order-status-font">{ditem.deliverPhone}</text>
+						</view>
+						<view class="order-status-right">
+							<text class="order-status-font3">{this.fmtDeliverStatus(ditem.status)} ·</text>
+						</view>
+					</view>
+				</view>
+				
+			</view>
+			
+			<view class="footer">
+				<text class="loadDesc">{this.data.haveMoreData?'加载中...':'没有啦！'}</text>
+			</view>
+		</scroll-view>
+    </view>
+</template>
+<script>
+	import $kn from "../../script/kn.js";
+	export default {
+		name: 'confirm',
+		apiready(){//like created
+			this.data.currentIndex = api.pageParam.currentIndex;
+			var wareType = this.data.wareTypeList[this.data.currentIndex];
+			// this.data.name = wareType.name;
+			this.updatedWareList()
+		},
+		data() {
+			return{
+				name:'all',
+				wareTypeList:[
+					{name: 'confirm', label: '新订单', size: null},
+					{name: 'delivery', label: '待抢单', size: null},
+					{name: 'delivering', label: '配送中', size: null},
+					{name: 'expect', label: '配送异常', size: null},
+					{name: 'cancel', label: '取消/退款', size: null},
+					{name: 'remainder', label: '催单', size: null},
+					{name: 'all', label: '全部', size: null},
+				],
+				currentIndex:0,
+				dataList: [],
+				page: 1,
+				limit: 10,
+				haveMoreData: true,
+				refresherTriggered: false,
+				wareTypeId: ''
+			}
+		},
+		methods: {
+
+			fnDelivery(e){
+				e.stopPropagation && e.stopPropagation();
+				this.toast('delivery')
+			},
+
+			fnOpenDetailWin(e) {
+				api.openWin({
+					name: 'orderDetail',
+					url: './detail.stml',
+					pageParam: {
+						orderId: e.currentTarget.dataset.id,
+						shopId: e.currentTarget.dataset.shop,
+						orderNo: e.currentTarget.dataset.no,
+						tag: e.currentTarget.dataset.tag
+					},
+					animation: {
+						type: "fade",
+						subType:"from_right",
+					}
+				});
+			},
+			onscrolltolower() {
+				if (this.data.haveMoreData) {
+					this.fnGetWareList(true);
+				}
+			},
+			onrefresherrefresh(){
+				this.data.refresherTriggered = true;
+				this.fnGetWareList(false);
+			},
+			updatedWareList(){
+				if (this.data.wareTypeList.length > 0) {
+					var wareType = this.data.wareTypeList[this.data.currentIndex];
+					this.data.wareTypeId = wareType.name=='全部'?'':wareType.name;
+					this.data.refresherTriggered = true;
+					this.fnGetWareList(false);
+				}
+			},
+			// 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
+			fnGetWareList(loadMore_) {
+				// 如果是加载更多，需要实现分页
+				if (loadMore_) {
+					this.data.page ++;
+					// this.data.skip += limit;
+				} else {
+					this.data.page = 0;
+				}
+
+				var currentCity = $kn.getCurrentCityInfo();
+				var that = this;
+				// 根据城市和商品分类获得相应的商品列表
+				$kn.ajax({
+					url: 'order/list',
+					data: {
+						body: {
+							shopId: currentCity?currentCity.id:'',
+							type: this.data.wareTypeId,
+							pageNum: this.data.page,
+							pageSize: this.data.limit
+						}
+					}
+				}, function(ret, err) {
+					// api.alert({msg:'ret='+JSON.stringify(ret)+', err='+JSON.stringify(err)},function(ret){   
+					// })
+					if (ret && ret.data) {
+						var data = ret.data;
+						that.data.haveMoreData = data.list.length == that.data.limit;
+						if (loadMore_) {
+							that.data.dataList = that.data.dataList.concat(data.list);
+						} else {
+							that.data.dataList = data.list;
+						}
+					} else {
+						api.toast({
+							msg: '加载数据失败',
+							duration: 2000,
+							location: 'bottom'
+						});
+					}
+					that.data.refreshState = 'normal';
+					that.data.refresherTriggered = false;
+				});
+			},
+			fmtWaitTime(start, end){
+				var date1=new Date(start);    //开始时间
+				var date2=new Date(end);    //结束时间
+				var date3=date2.getTime()-date1.getTime(); //时间差秒
+				//计算出相差天数
+				var days=Math.floor(date3/(24*3600*1000));
+
+				//计算出小时数
+				var leave1=date3%(24*3600*1000);  //计算天数后剩余的毫秒数
+				var hours=Math.floor(leave1/(3600*1000));
+
+				//计算相差分钟数
+				var leave2=leave1%(3600*1000);        //计算小时数后剩余的毫秒数
+				var minutes=Math.floor(leave2/(60*1000));
+
+				//计算相差秒数
+				var leave3=leave2%(60*1000);     //计算分钟数后剩余的毫秒数
+				var seconds=Math.round(leave3/1000);
+				// var seconds=parseFloat(leave3/1000).toFixed(1) * 10;
+
+				return minutes+':'+seconds;
+				// let stimestamp = new Date(start)
+				// let etimestamp = new Date(end)
+				// var mistiming = Math.round(etimestamp / 1000) - Math.round(stimestamp/1000);
+				// // var inm = Math.floor(mistiming / 3600)
+				// var inm = parseFloat(mistiming / 3600).toFixed(2);
+				// return inm;
+			},
+			fmtDeliverStatus(status){
+				// 1待接单，2待取货，3配送中，4已完成，5已取消，6骑士到店
+				switch(status){
+					case 1:
+						return '待接单';
+					case 2:
+						return '待取货';
+					case 3:
+						return '配送中';
+					case 4:
+						return '已完成';
+					case 5:
+						return '已取消';
+					case 6:
+						return '骑士到店';
+					default:
+						return '未知';
+				}
+			},
+			fnCall(e){
+				e.stopPropagation && e.stopPropagation();
+				var phone = e.currentTarget.dataset.num;
+				// this.toast('call')
+				api.call({
+					type: 'tel_prompt',
+					number: phone
+				});
+			},
+        
+			toast(msg) {
+				api.toast({
+					msg: msg,
+					location: 'middle',
+					global: true
+				});
+			}
+		}
+	}
+</script>
+<style>
+    .page {
+        height: 100%;
+		width: 100%;
+    }
+
+    .warelist {
+        width: 100%;
+        flex: 1;
+        overflow-y: scroll;
+        /* background-color: #A1A1A1; */
+    }
+	.order-part{
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        background-color: #fff;
+        margin-top: 10px;
+        padding: 15px;
+        border-bottom: 0.5px solid #d1d1d1;
+    }
+    .order-info{
+        flex-direction: row;        
+        height: 43px;
+        width: 100%;       
+        margin-bottom: 10px;
+    }
+    .order-info-number{
+        width: 46px;
+        height: 43px;
+        background-color: #EDEDED;
+        font-size: 20px;
+        line-height: 43px;
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #505050;
+       
+    }
+    
+    .order-info-person{
+        font-family: Arial, Helvetica, sans-serif;
+        height: 43px;
+        margin-left: 10px;        
+    }
+    .order-info-name{
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 26px;
+    }
+    .order-info-addre{
+        font-size: 13px;
+        color: #A1A1A1;
+        line-height: 18px;
+        height: 18px;
+        
+    }
+    .order-info-phone{
+        position: absolute;
+        right: 10px;
+        top: 0px;
+    }
+    .order-time{
+        width: 100%;
+        border: none;
+        flex-direction:row;        
+        padding-bottom: 5px;     
+    }
+    .order-time-border{
+        border-bottom: 1px solid #EDEDED;  
+    }
+    .orer-time-tirp,.order-pay-tirp{
+        color: #A1A1A1;
+        font-size: 13px;
+        line-height: 18px;
+    }
+    .order-time-date,.order-pay-cny{
+        color: #000;
+        font-size: 13px;
+        line-height: 18px;
+    }
+    .order-wait,.order-courier{
+        flex-direction: row;
+        padding-top: 5px;
+        width: 100%;
+    }
+    
+    .order-wait-time{
+        font-size: 24px;
+        color: #AD7057 ;
+        line-height: 33px;
+        padding: 0 4px 0 4px;
+    }
+    .order-wait-fa{
+        line-height: 33px;
+        font-size: 13px;
+        color: #A1A1A1;
+    }
+    .order-wait-fb{
+        line-height: 33px;
+        font-size: 13px;
+        color: #000000;        
+    }
+    .order-wait-fc{
+        line-height: 33px;
+        font-size: 13px;
+        color: #AD7057;
+        padding: 0 4px 0 4px;
+    }
+   .order-wait-number,.order-wait-staus{
+       flex-direction: row;
+       position: absolute;      
+       right: 10px;
+       top: 5px;       
+   }
+   .pl4{
+       padding: 0 4px;
+   }
+  
+    .menu-box{
+        width: 100%;
+    }
+	.menu-list{
+		width: 100%;
+	}
+   .menu-list-name{
+       font-size: 13px;
+       line-height: 20px;
+   }
+   .menu-list-number{
+       position: absolute;
+       height: 20px;
+       right: 10px;
+       top: 0px;
+       width: 40px;
+       font-size: 13px;
+       line-height: 20px;
+       text-align: right;
+   }
+   .red{
+       color: #D10028 ;
+   }
+   .menu-remark{
+       width: 100%;
+       flex-direction: row;
+       background-color: #F6F6F6 ;
+       padding: 5px 8px;
+       margin: 5px 0px 8px;
+   }
+   .menu-remark-fa{
+       font-size: 13px;
+       color: #A1A1A1;
+   }
+   .menu-remark-fb{
+       font-size: 13px;
+   }
+   .order-pay{
+       flex-direction: row;
+       position: absolute;
+       right: 10px;
+       top: 0px;
+       width: 120px;
+       align-items: flex-end;
+   }
+   .order-operate{
+       flex-direction: row;
+       text-align: center;
+       padding: 10px 0;
+   }
+   .order-operate-btn1{
+       width: 166px;
+       height: 34px;
+       border: 1px solid #EBEBEB;
+       border-radius: 17px; 
+       margin: 0 5px 0 5px;           
+   }
+   .order-operate-btn2 {
+       width: 166px;
+       height: 34px;
+       border: 1px solid #D10028;
+       border-radius: 17px;        
+       background-color: #D10028;  
+       color: #FFFFFF; 
+       margin: 0 5px 0 5px;   
+   }
+
+   .order-status{
+       flex-direction: row;
+       width: 100%;
+       height: 50px;
+       padding: 10px 0;
+   }
+   .order-status-container{
+       flex-direction: row;
+       width: 100%;
+       height: 100%;
+   }
+   
+   .order-status-left{
+       flex-direction: row;
+       align-items: flex-end;
+        width: 50%;
+   }
+   .order-status-right{
+        flex-direction: row;
+        width: 50%;
+        /* padding-left: 13%; */
+        align-items: flex-end;
+   }
+   .order-status-font{
+        align-items:center;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #A1A1A1;
+   }
+   .order-status-font1{
+       text-align:start;
+       padding: 0 5px;
+       font-family: PingFangSC-Regular;
+        font-size: 24px;
+        color: #AD7057;
+   }
+   .order-status-font2{
+       padding: 0 5px;
+       font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #000000;
+   }
+   .order-status-font3{
+        position: absolute;
+        right: 10px;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #AD7057;
+        text-align: right;
+   }
+
+    .footer {
+        height: 44px;
+        justify-content: center;
+        align-items: center;
+        border: none;
+    }
+
+    .loadDesc {
+        width: 200px;
+        text-align: center;
+    }
+   .hidden{display: none;}
+   .show{display: flex;}
+</style>
