@@ -125,7 +125,7 @@ export default{
             var name = e.detail.name;
             // this.toast(JSON.stringify(e.detail))
             if (this.data.currentIndex != index) {
-                this.data.currentIndex = index;                
+                this.data.currentIndex = index;  
                 $kn.byId('nav').scrollTo({
                     // view : name
                     position: (index>2?'lower':'upper')

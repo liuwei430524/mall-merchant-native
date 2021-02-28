@@ -1,0 +1,81 @@
+<template name='location'>
+    <view class="page">
+
+    </view>
+</template>
+<script>
+	export default {
+		name: 'location',
+		apiready(){//like created
+			let that = this;
+			this.data.bMap = api.require('bMap');
+			if (api.systemType === 'ios') {
+				// ios需要对模块初始化
+				this.data.bMap.initMapSDK(function(ret) {
+					that.toast(JSON.stringify(ret))
+					if (ret.status) {
+						this.fnOpenbMap();
+					}
+				});
+			} else {
+				this.fnOpenbMap();
+			}
+		},
+		data() {
+			return{
+				bMap:null,
+			}
+		},
+		methods: {
+			fnOpenbMap() {
+                this.data.bMap.open({
+                        rect: {
+                                x: 0,
+                                y: 0,
+                                w: api.frameWidth,
+                                h: api.frameHeight
+                        },
+                        center: {
+                                lon: 116.4021310000,
+                                lat: 39.9994480000
+                        },
+                        zoomLevel: 18,
+                        showUserLocation: true,
+                        // fixedOn: api.frameName,
+                        fixed: true
+                }, function(ret) {
+                        if (ret.status) {
+                                // 打开头部
+                                //fnOpenframeTop();
+                                // 打开点击定位中心的frm
+                                //fnOpenframeBottom();
+                                // 自动定位到用户中心点
+                                fnBmapShowUserLocation();
+                        }
+                });
+			},
+			fnBmapShowUserLocation() {
+                // 显示用户位置  箭头图标
+                this.data.bMap.showUserLocation({
+                        isShow: true,
+                        trackingMode: 'none'
+                });
+			},
+			
+			toast(msg) {
+				api.toast({
+					msg: msg,
+					duration: 1000*10,
+					location: 'middle',
+					global: true
+				});
+			}
+		}
+	}
+</script>
+<style>
+    .page {
+		width: 100%;
+        height: 100%;
+    }
+</style>

@@ -59,5 +59,9 @@
 
 	<permission name="hardware" />
 
+	<feature name="bMap"> 
+		<param name="android_api_key" value="iUpuvOeWjqikxjxjWsVOAuG1"/>  
+		<param name="ios_api_key" value="SrhUkSjGAdUUZTn1vvja7ZQ8"/> 
+	</feature> 
 </widget>
 
