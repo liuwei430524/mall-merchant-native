@@ -126,12 +126,8 @@ export default{
             // this.toast(JSON.stringify(e.detail))
             if (this.data.currentIndex != index) {
                 this.data.currentIndex = index;  
-                // this.toast('index==>'+index+', api.winWidth='+api.winWidth)
-                $kn.byId('nav').scrollTo({
-                    // view : name
-                    position: (index>2?'lower':'upper')
-                });
-                
+                var params = (api.systemType === 'ios') ? {position:(index>2?'lower':'upper')} : {view:(index>2?'all':'confirm')}
+                $kn.byId('nav').scrollTo(params);   
             }
         },
         fnSearch(){this.toast('search')},
