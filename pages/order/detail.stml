@@ -345,6 +345,7 @@
     .order {
 		width: 100%;
         height: 100%;
+        background-color: #ffffff;
 	}
     .content,.tracking,.user{
         width: 100%;
@@ -476,6 +477,8 @@
         font-size: 14px;
         color: #7B7B7B;
         background-image: none;
+        
+        border-bottom: none;
     }
 
     .order-staus-selected {
@@ -483,9 +486,13 @@
         font-size: 14px;
         color: #D2082E;
         font-weight: bolder;
-        background-image: url(../../image/line-4px.png);
+        
+        border: none;
+        border-bottom: 4px solid #E87389;
+
+        /* background-image: url(../../image/line-4px.png);
         background-repeat: no-repeat;
-        background-position: bottom;
+        background-position: bottom; */
     }
 	.order-pay,.order-detail,.order-deliver{
 		padding: 15px;

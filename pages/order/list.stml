@@ -95,7 +95,10 @@
 			}
 		},
 		methods: {
-
+            fnPrint(e){
+				e.stopPropagation && e.stopPropagation();
+				this.toast('print')
+            },
 			fnDelivery(e){
 				e.stopPropagation && e.stopPropagation();
 				this.toast('delivery')
@@ -256,7 +259,6 @@
         width: 100%;
         flex: 1;
         overflow-y: scroll;
-        /* background-color: #A1A1A1; */
     }
 	.order-part{
         flex-direction: column;
@@ -415,14 +417,14 @@
        padding: 10px 0;
    }
    .order-operate-btn1{
-       width: 166px;
+       width: 45%;
        height: 34px;
        border: 1px solid #EBEBEB;
        border-radius: 17px; 
        margin: 0 5px 0 5px;           
    }
    .order-operate-btn2 {
-       width: 166px;
+       width: 45%;
        height: 34px;
        border: 1px solid #D10028;
        border-radius: 17px;        

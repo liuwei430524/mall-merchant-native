@@ -116,7 +116,7 @@ export default{
                 this.data.currentIndex = index;
                 $kn.byId('frameGroup').setIndex({
                     index: index,
-                    scroll: true
+                    scroll: false
                 });
             }
         },
@@ -126,6 +126,7 @@ export default{
             // this.toast(JSON.stringify(e.detail))
             if (this.data.currentIndex != index) {
                 this.data.currentIndex = index;  
+                // this.toast('index==>'+index+', api.winWidth='+api.winWidth)
                 $kn.byId('nav').scrollTo({
                     // view : name
                     position: (index>2?'lower':'upper')
@@ -330,6 +331,7 @@ export default{
         font-size: 14px;
         color: #7B7B7B;
         background-image: none;
+        border-bottom: none;
     }
 
     .nav-menu-selected {
@@ -337,9 +339,13 @@ export default{
         font-size: 14px;
         color: #D2082E;
         font-weight: bolder;
-        background-image: url(../../image/line-4px.png);
+        
+        border: none;
+        border-bottom: 4px solid #E87389;
+
+        /* background-image: url(../../image/line-4px.png);
         background-repeat: no-repeat;
-        background-position: bottom;
+        background-position: bottom; */
     }
 
     #frameGroup {
@@ -473,18 +479,6 @@ export default{
         border: 1px solid #ddd;
         background-color: #fff;
     }
-    
-    .footer {
-        height: 44px;
-        justify-content: center;
-        align-items: center;
-        border: none;
-    }
-
-    .loadDesc {
-        width: 200px;
-        text-align: center;
-    }
 
     .minicart {
         position: absolute;
@@ -496,229 +490,6 @@ export default{
         width: 100%;
         height: 100%;
     }
-    .order-part{
-        flex-direction: column;
-        width: 100%;
-        height: auto;
-        background-color: #fff;
-        margin-top: 10px;
-        padding: 15px;
-        border-bottom: 0.5px solid #d1d1d1;
-    }
-    .order-info{
-        flex-direction: row;        
-        height: 43px;
-        width: 100%;       
-        margin-bottom: 10px;
-    }
-    .order-info-number{
-        width: 46px;
-        height: 43px;
-        background-color: #EDEDED;
-        font-size: 20px;
-        line-height: 43px;
-        text-align: center;
-        font-family: Arial, Helvetica, sans-serif;
-        color: #505050;
-       
-    }
-    
-    .order-info-person{
-        font-family: Arial, Helvetica, sans-serif;
-        height: 43px;
-        margin-left: 10px;        
-    }
-    .order-info-name{
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 26px;
-    }
-    .order-info-addre{
-        font-size: 13px;
-        color: #A1A1A1;
-        line-height: 18px;
-        height: 18px;
-        
-    }
-    .order-info-phone{
-        position: absolute;
-        right: 10px;
-        top: 0px;
-    }
-    .order-time{
-        width: 100%;
-        border: none;
-        flex-direction:row;        
-        padding-bottom: 5px;     
-    }
-    .order-time-border{
-        border-bottom: 1px solid #EDEDED;  
-    }
-    .orer-time-tirp,.order-pay-tirp{
-        color: #A1A1A1;
-        font-size: 13px;
-        line-height: 18px;
-    }
-    .order-time-date,.order-pay-cny{
-        color: #000;
-        font-size: 13px;
-        line-height: 18px;
-    }
-    .order-wait,.order-courier{
-        flex-direction: row;
-        padding-top: 5px;
-        width: 100%;
-    }
-    
-    .order-wait-time{
-        font-size: 24px;
-        color: #AD7057 ;
-        line-height: 33px;
-        padding: 0 4px 0 4px;
-    }
-    .order-wait-fa{
-        line-height: 33px;
-        font-size: 13px;
-        color: #A1A1A1;
-    }
-    .order-wait-fb{
-        line-height: 33px;
-        font-size: 13px;
-        color: #000000;        
-    }
-    .order-wait-fc{
-        line-height: 33px;
-        font-size: 13px;
-        color: #AD7057;
-        padding: 0 4px 0 4px;
-    }
-   .order-wait-number,.order-wait-staus{
-       flex-direction: row;
-       position: absolute;      
-       right: 10px;
-       top: 5px;       
-   }
-   .pl4{
-       padding: 0 4px;
-   }
-  
-    .menu-box{
-        width: 100%;
-    }
-	.menu-list{
-		width: 100%;
-	}
-   .menu-list-name{
-       font-size: 13px;
-       line-height: 20px;
-   }
-   .menu-list-number{
-       position: absolute;
-       height: 20px;
-       right: 10px;
-       top: 0px;
-       width: 40px;
-       font-size: 13px;
-       line-height: 20px;
-       text-align: right;
-   }
-   .red{
-       color: #D10028 ;
-   }
-   .menu-remark{
-       width: 100%;
-       flex-direction: row;
-       background-color: #F6F6F6 ;
-       padding: 5px 8px;
-       margin: 5px 0px 8px;
-   }
-   .menu-remark-fa{
-       font-size: 13px;
-       color: #A1A1A1;
-   }
-   .menu-remark-fb{
-       font-size: 13px;
-   }
-   .order-pay{
-       flex-direction: row;
-       position: absolute;
-       right: 10px;
-       top: 0px;
-       width: 120px;
-       align-items: flex-end;
-   }
-   .order-operate{
-       flex-direction: row;
-       text-align: center;
-       padding: 10px 0;
-   }
-   .order-operate-btn1{
-       width: 166px;
-       height: 34px;
-       border: 1px solid #EBEBEB;
-       border-radius: 17px; 
-       margin: 0 5px 0 5px;           
-   }
-   .order-operate-btn2 {
-       width: 166px;
-       height: 34px;
-       border: 1px solid #D10028;
-       border-radius: 17px;        
-       background-color: #D10028;  
-       color: #FFFFFF; 
-       margin: 0 5px 0 5px;   
-   }
-
-   .order-status{
-       flex-direction: row;
-       width: 100%;
-       height: 50px;
-       padding: 10px 0;
-   }
-   .order-status-container{
-       flex-direction: row;
-       width: 100%;
-       height: 100%;
-   }
-   
-   .order-status-left{
-       flex-direction: row;
-       align-items: flex-end;
-        width: 50%;
-   }
-   .order-status-right{
-        flex-direction: row;
-        width: 50%;
-        /* padding-left: 13%; */
-        align-items: flex-end;
-   }
-   .order-status-font{
-        align-items:center;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #A1A1A1;
-   }
-   .order-status-font1{
-       text-align:start;
-       padding: 0 5px;
-       font-family: PingFangSC-Regular;
-        font-size: 24px;
-        color: #AD7057;
-   }
-   .order-status-font2{
-       padding: 0 5px;
-       font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #000000;
-   }
-   .order-status-font3{
-        position: absolute;
-        right: 10px;
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #AD7057;
-        text-align: right;
-   }
    .hidden{display: none;}
    .show{display: flex;}
 </style>
