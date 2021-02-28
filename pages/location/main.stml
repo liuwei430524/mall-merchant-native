@@ -21,51 +21,51 @@
 					this.data.bMap.initMapSDK(function(ret) {
 						that.toast('---->'+JSON.stringify(ret))
 						if (ret.status) {
-							// this.fnOpenbMap();
+							this.fnOpenbMap();
 						}
 					});
 				} else {
-					// this.fnOpenbMap();
+					this.fnOpenbMap();
 				}
 			}catch(e){
 				this.toast('地图加载失败，错误码：'+e)
 			}
 		},
 		methods: {
-			// fnOpenbMap() {
-			// 	this.data.bMap.open({
-			// 		rect: {
-			// 			x: 0,
-			// 			y: 0,
-			// 			w: api.frameWidth,
-			// 			h: api.frameHeight
-			// 		},
-			// 		center: {
-			// 			lon: 116.4021310000,
-			// 			lat: 39.9994480000
-			// 		},
-			// 		zoomLevel: 18,
-			// 		showUserLocation: true,
-			// 		// fixedOn: api.frameName,
-			// 		fixed: true
-			// 	}, function(ret) {
-			// 		if (ret.status) {
-			// 			// 打开头部
-			// 			//fnOpenframeTop();
-			// 			// 打开点击定位中心的frm
-			// 			//fnOpenframeBottom();
-			// 			// 自动定位到用户中心点
-			// 			fnBmapShowUserLocation();
-			// 		}
-			// 	});
-			// },
-			// fnBmapShowUserLocation() {
-			// 	// 显示用户位置  箭头图标
-			// 	this.data.bMap.showUserLocation({
-			// 		isShow: true,
-			// 		trackingMode: 'none'
-			// 	});
-			// },
+			fnOpenbMap() {
+				this.data.bMap.open({
+					rect: {
+						x: 0,
+						y: 0,
+						w: api.frameWidth,
+						h: api.frameHeight
+					},
+					center: {
+						lon: 116.4021310000,
+						lat: 39.9994480000
+					},
+					zoomLevel: 18,
+					showUserLocation: true,
+					// fixedOn: api.frameName,
+					fixed: true
+				}, function(ret) {
+					if (ret.status) {
+						// 打开头部
+						//fnOpenframeTop();
+						// 打开点击定位中心的frm
+						//fnOpenframeBottom();
+						// 自动定位到用户中心点
+						this.fnBmapShowUserLocation();
+					}
+				});
+			},
+			fnBmapShowUserLocation() {
+				// 显示用户位置  箭头图标
+				this.data.bMap.showUserLocation({
+					isShow: true,
+					trackingMode: 'none'
+				});
+			},
 			
 			toast(msg) {
 				api.toast({
