@@ -40,7 +40,7 @@
 import $kn from "../../script/kn.js";
 // import '../../components/minicart_frame.stml';
 // import '../../components/status-bar-view.stml';
-import '../cityselector/cityselector.stml';
+import 'widget://pages/cityselector/cityselector.stml';
 // import '../../components/order-list-view.stml';
 
 export default{

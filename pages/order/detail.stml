@@ -25,7 +25,7 @@
                         <view v-for="ritem,rindex in refunds" class="distributor-step-box">
                             <view class={rindex==0?'step-start':'step-end'}></view>
                             <view class="step">
-                                <text class="step-info-title">{fmtRefundStatus(ritem.refundStatus)}·{this.fmtDate(ditem.addTime,'hh:mm')}</text>
+                                <text class="step-info-title">{this.fmtRefundStatus(ritem.refundStatus)}·{this.fmtDate(ritem.addTime,'hh:mm')}</text>
                                 <text class="step-info">原因：{ritem.reason}</text>
                             </view>
                         </view>
@@ -199,9 +199,12 @@
 	export default {
 		name: 'orderDetail',
 		apiready(){//like created
-
-            // 获取商品详情数据
-            this.getOrderInfo(api.pageParam);
+            try{
+                // 获取商品详情数据
+                this.getOrderInfo(api.pageParam);
+            }catch(e){
+                this.toast('数据获取异常，错误码 :'+e)
+            }
 		},
 		data() {
 			return{
@@ -273,7 +276,7 @@
                 this.data.navActive=e.currentTarget.dataset.name;
             },
             fnOpenLocationWin(e){
-                this.toast(JSON.stringify(e.currentTarget.dataset))
+                // this.toast(JSON.stringify(e.currentTarget.dataset))
                 var lat = e.currentTarget.dataset.lat;
                 var lng = e.currentTarget.dataset.lng;
                 api.openWin({
