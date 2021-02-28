@@ -99,7 +99,7 @@ export default{
                 var wareType = this.data.wareTypeList[i];
                 frames.push({
                     name: wareType.name,
-                    url: './list.stml',
+                    url: 'widget://pages/order/list.stml',
                     pageParam:{
                         currentIndex: i
                     },

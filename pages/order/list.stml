@@ -104,7 +104,7 @@
 			fnOpenDetailWin(e) {
 				api.openWin({
 					name: 'orderDetail',
-					url: './detail.stml',
+					url: 'widget://pages/order/detail.stml',
 					pageParam: {
 						orderId: e.currentTarget.dataset.id,
 						shopId: e.currentTarget.dataset.shop,

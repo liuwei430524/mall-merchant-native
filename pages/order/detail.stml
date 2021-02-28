@@ -278,7 +278,7 @@
                 var lng = e.currentTarget.dataset.lng;
                 api.openWin({
                     name: 'location',
-                    url: '../location/main.stml',
+                    url: 'widget://pages/location/main.stml',
                     pageParam:{lng:lng,lat:lat},
                     animation: {
                         type: "ripple",
