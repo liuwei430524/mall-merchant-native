@@ -1,0 +1,181 @@
+<template >
+    <view class="delivery-main">
+		<safe-area></safe-area>
+		<view class="delivery-container">
+			<text class="delivery-close" onclick={this.closeAction}>×</text>
+			<text class="delivery-title">选择配送平台</text>
+			<scroll-view class="delivery-section-box" scroll-y='true'>
+				
+					<view v-for="(ditem, index) in dataList" class="delivery-section horizontal">
+						<image class="delivery-section-logo" src={'../../image/icon_'+(ditem.name)+'@2x.png'}></image>
+						<text class="delivery-section-name" data-item={ditem} onclick={this.fnSelectCity}>{ditem.label}</text>
+						<text class="delivery-section-coupon">已减3元</text>
+						<text class="delivery-section-fee">4.5元</text>
+						<checkbox class="delivery-section-checked" icon="../../icon/icon_check.png" selectedIcon="../../icon/icon_checked.png" color="#D10028" checked value={ditem.name}/>
+					</view>
+				
+			</scroll-view>
+
+			<view class="delivery-footer">
+				<button class="delivery-confirm">确定</button>
+			</view>
+		</view>
+    </view>
+</template>
+<script>
+	export default {
+		name: 'deliveryselector',
+		apiready(){//like created
+			this.toast('delivery selector loading');
+		},
+		data() {
+			return{
+				dataList: [
+					{name:"ZPS",label:"自配送",id:1,fee:4.5,coupon:3},
+					{name:"dada",label:"达达",id:2,fee:4.5,coupon:3},
+					{name:"shansong",label:"闪送",id:3,fee:4.5,coupon:3},
+					{name:"shunfeng",label:"顺丰",id:4,fee:4.5,coupon:3},
+				]
+			}
+		},
+		methods: {
+			fnSelectDeliver(){
+
+			},
+			checkboxgroupChanged(){
+
+			},
+			closeAction(){
+				this.toast('close')
+				this.closeFrame();
+			},
+			
+			closeFrame(currentLogistic) {
+				this.fire('result', currentLogistic);
+			},
+			toast(msg) {
+				api.toast({
+					msg: msg,
+					location: 'middle',
+					global: true
+				});
+			}
+		}
+	}
+</script>
+<style>
+	.delivery-main {
+        height: 100%;
+		width: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+	.delivery-container{
+		position:absolute;
+		bottom: 0px;
+		height: 50%;
+		width: 100%;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		background-color: #fff;
+		text-align: center;
+		
+	}
+	.delivery-close{
+		position: absolute;
+		right: 10px;
+		width: 50px;
+        height: 35px;
+        font-size: 35px;
+        /* color: #fff; */
+        text-align: center;
+	}
+	.delivery-title{
+		align-self: center;
+        width: 100%;
+        padding: 10px 0;
+		/* padding-left: 10px; */
+        font-family: PingFangSC-Regular;
+		font-size: 14px;
+        text-align: left;
+	}
+	.vertical {
+        flex-direction: column;
+		width: 100%;
+		height:100%;
+	}
+	.horizontal{
+        flex-direction: row;
+		width: 100%;
+		height:100%;
+	}
+	.delivery-section-box{
+		padding: 10px 0;
+		width: 100%;
+		height: 100%;
+	}
+	.delivery-section {
+        width: 100%;
+		height: 44px;
+		flex:1;
+		padding: 10px 0;
+    }
+	.delivery-section-logo{
+		flex: 1;
+		width: 24px;
+        height: 24px;
+		/* padding: 0 5px; */
+	}
+
+	.delivery-section-name{
+		flex: 1;
+		width: 30%;
+        height: 44px;
+		padding: 0 5px;
+        font-size: 14px;
+	}
+
+	.delivery-section-coupon{
+		flex: 1;
+		width: auto;
+        height: 44px;
+		padding: 0 5px;
+        font-size: 14px;
+        color: #D10028;
+	}
+
+	.delivery-section-fee{
+		flex: 1;
+		width: auto;
+        height: 44px;
+		padding: 0 5px;
+        font-size: 14px;
+        /* color: #fff; */
+	}
+
+
+	.delivery-section-checked{
+		flex: 1;
+		width: 24px;
+        height: 24px;
+		/* color:#D10028 */
+		/* padding: 0 10px; */
+        /* font-size: 14px; */
+	}
+
+	.delivery-footer{
+		position:absolute;
+		bottom: 0;
+		width: 100%;
+		height: 46px;
+		z-index: 100;
+		text-align: center;
+	}
+	.delivery-confirm{
+		background: #D10028;
+		border-radius: 22px;
+		width: 90%;
+		height: 36px;
+		margin: 0 5%;
+        color: #fff;
+	}
+</style>

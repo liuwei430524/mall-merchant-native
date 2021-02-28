@@ -34,20 +34,26 @@
     <view class="cityselect" v-if="citySelectorOpened">
         <cityselector onresult="oncityselector"></cityselector>
     </view>
+
+    <view class="deliveryselect" v-if="deliverySelectorOpened">
+        <deliveryselector onresult="onDeliverySelector"></deliveryselector>
+    </view>
   </view>
 </template>
 <script>
 import $kn from "../../script/kn.js";
 // import '../../components/minicart_frame.stml';
 // import '../../components/status-bar-view.stml';
-import 'widget://pages/cityselector/cityselector.stml';
+import '../cityselector/cityselector.stml';
+import '../delivery/deliveryselector.stml';
 // import '../../components/order-list-view.stml';
 
 export default{
-    name:'main',
+    name:'order',
     data() {
         return {
             citySelectorOpened: false,
+            deliverySelectorOpened:true,
             cityName:'北京',
             cityDataList: [],
             shopName:'全部',
@@ -179,7 +185,15 @@ export default{
             this.data.citySelectorOpened = false;
         },
 
+        onDeliverySelector(e){
+            var currentDelivery = e.detail;
+
+        },
+        fnOpenDeliverySelectorFrame(){
+            this.data.deliverySelectorOpened = !this.data.deliverySelectorOpened;
+        },
         fnOpenCitySelectorFrame() {
+            this.toast('open city selector')
             this.data.citySelectorOpened = !this.data.citySelectorOpened;
         },
         
@@ -482,6 +496,12 @@ export default{
     }
 
     .cityselect {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .deliveryselect {
         position: absolute;
         width: 100%;
         height: 100%;

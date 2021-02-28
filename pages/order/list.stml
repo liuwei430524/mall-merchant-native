@@ -61,6 +61,7 @@
 				<text class="loadDesc">{this.data.haveMoreData?'加载中...':'没有啦！'}</text>
 			</view>
 		</scroll-view>
+
     </view>
 </template>
 <script>
@@ -91,7 +92,7 @@
 				limit: 10,
 				haveMoreData: true,
 				refresherTriggered: false,
-				wareTypeId: ''
+                wareTypeId: '',
 			}
 		},
 		methods: {
@@ -101,9 +102,14 @@
             },
 			fnDelivery(e){
 				e.stopPropagation && e.stopPropagation();
-				this.toast('delivery')
+                
+                var jsfun = 'fnOpenDeliverySelectorFrame();';
+                api.execScript({
+                    name: 'order',
+                    script: jsfun
+                });
+                this.toast('delivery')
 			},
-
 			fnOpenDetailWin(e) {
 				api.openWin({
 					name: 'orderDetail',
@@ -495,6 +501,7 @@
         width: 200px;
         text-align: center;
     }
+
    .hidden{display: none;}
    .show{display: flex;}
 </style>

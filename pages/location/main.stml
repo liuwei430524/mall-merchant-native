@@ -13,7 +13,7 @@
 			}
 		},
 		apiready(){//like created
-			let that = this;
+			var that = this;
 			try{
 				var bMap = api.require('bMap');
 				this.data.bMap = bMap;
@@ -22,38 +22,29 @@
 					that.toast('没有可用的地图组件')
 					return false;
 				}
-				that.toast(JSON.stringify(Object.keys(bMap)))
-				// if (api.systemType === 'ios') {
-					//ios需要对模块初始化
+				
+				if (api.systemType === 'ios') {
+					// ios需要对模块初始化
 					bMap.initMapSDK(function(ret) {
 						that.toast(JSON.stringify(ret))
 						if (ret.status) {
-							this.fnOpenbMap();
+							this.fnOpenbMap(bMap);
 						}
 					});
-				// } else {
-				// 	this.fnOpenbMap();
-				// }
+				} else {
+					this.fnOpenbMap(bMap);
+				}
 
-
-				api.alert("--->"+JSON.stringify(Object.keys(bMap)));
-				bMap.getCurrentLocation(
-					function(ret, err) {
-						if (ret.status){
-						api.alert(JSON.stringify(ret));
-						}else {
-						api.alert(JSON.stringify(err));
-						}
-					});
 			}catch(e){
 				this.toast('地图加载失败，错误码：'+e)
 			}
 		},
 		methods: {
-			fnOpenbMap() {
-				let that = this;
+			fnOpenbMap(bMap) {
+				var that = this;
+				that.toast('come in')
 				try{
-					this.data.bMap.open({
+					bMap.open({
 						rect: {
 							x: 0,
 							y: 0,
@@ -76,16 +67,16 @@
 							// 打开点击定位中心的frm
 							//fnOpenframeBottom();
 							// 自动定位到用户中心点
-							this.fnBmapShowUserLocation();
+							this.fnBmapShowUserLocation(bMap);
 						}
 					});
 				}catch(e){
 					this.toast('地图打开失败，错误码：'+e)
 				}
 			},
-			fnBmapShowUserLocation() {
+			fnBmapShowUserLocation(bMap) {
 				// 显示用户位置  箭头图标
-				this.data.bMap.showUserLocation({
+				bMap.showUserLocation({
 					isShow: true,
 					trackingMode: 'none'
 				});
