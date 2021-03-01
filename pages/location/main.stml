@@ -1,10 +1,9 @@
 <template name='location'>
     <view class="page">
-
+		<text>body</text>
     </view>
 </template>
 <script>
-	const bMap={}
 	export default {
 		name: 'location',
 		data() {
@@ -42,32 +41,31 @@
 		methods: {
 			fnOpenbMap(bMap) {
 				var that = this;
-				that.toast('come in')
+				this.toast(JSON.stringify(api.pageParam));
+				var center = Object.assign({}, api.pageParam);
+				// that.toast('come in')
 				try{
 					bMap.open({
 						rect: {
 							x: 0,
 							y: 0,
-							w: api.frameWidth,
-							h: api.frameHeight
+							w: api.winWidth,
+							h: api.winHeight * 0.7
 						},
-						center: {
-							lon: 116.4021310000,
-							lat: 39.9994480000
-						},
+						center: center,
 						zoomLevel: 18,
-						showUserLocation: true,
+						showUserLocation: false,
 						// fixedOn: api.frameName,
 						fixed: true
 					}, function(ret) {
-						that.toast(JSON.stringify(ret));
+						// that.toast(JSON.stringify(ret));
 						if (ret.status) {
 							// 打开头部
 							//fnOpenframeTop();
 							// 打开点击定位中心的frm
 							//fnOpenframeBottom();
 							// 自动定位到用户中心点
-							this.fnBmapShowUserLocation(bMap);
+							that.fnBmapShowUserLocation(bMap);
 						}
 					});
 				}catch(e){
@@ -95,7 +93,9 @@
 </script>
 <style>
     .page {
-	width: 100%;
-        height: 100%;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+        height: 30%;
     }
 </style>

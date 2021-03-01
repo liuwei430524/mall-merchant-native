@@ -1,61 +1,61 @@
 <template name={this.data.name}>
     <view class="page">
 		<scroll-view scroll-y='true' class="warelist" enable-back-to-top refresher-enabled refresher-triggered={this.data.refresherTriggered} onrefresherrefresh={this.onrefresherrefresh} onscrolltolower={this.onscrolltolower}>
-			
-			<view v-for="(oitem, index) in dataList" class="order-part" data-shop={oitem.thirdShopId} data-id={oitem.id} data-no={oitem.orderSn} data-tag={oitem.channelTag} onclick={this.fnOpenDetailWin}>
 
-				<view class="order-info">
-					<text class="order-info-number">{oitem.daySn}</text>
-					<view class="order-info-person">
-						<text class="order-info-name">{oitem.consignee}</text>
-						<text class="order-info-addre">{oitem.deliveryPoiAddress}·{oitem.deliveryDistance/1000}公里</text>
-					</view>
-					<view class="order-info-phone" data-num={oitem.receiverPhone} onclick={this.fnCall}>
-						<image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
-					</view>                    
-				</view>
-				<view class="menu-box">
-					<view v-for="(citem,cindex) in oitem.orderItems" class="menu-list">
-						<text class="menu-list-name">{citem.productName}</text><text class={"menu-list-number"+(citem.productQuantity>1?' red':'')}>X {citem.productQuantity}</text>
-					</view>
-					<view class="menu-remark">                        
-						<text class="menu-remark-fb">备注: {oitem.note}</text>
-					</view>
-				</view>
-				<view class={"order-time"+(oitem.deliverCount>0?' order-time-border':'')}>
-					<text class="orer-time-tirp">要求送达：</text>
-					<text class="order-time-date">{oitem.fmtDeliverTime||''}</text>
-					<view class="order-pay">
-						<text class="order-pay-tirp">实付：</text>
-						<text class="order-pay-cny">￥{oitem.payAmount}</text>
-					</view>
-				</view>
-				<view class={"order-operate"+(oitem.processStatus==0?' show':' hidden')}>
-					<button class="order-operate-btn1" onclick={this.fnPrint}>打印</button>
-					<button class="order-operate-btn2" onclick={this.fnDelivery}>配送下单</button>
-				</view>
-				<view v-for="(ditem,dindex) in oitem.deliveries" :key="dindex" class={"order-status"+(oitem.processStatus>=1?' show':' hidden')}>
-					<view v-if="ditem.status==1" class="order-status-container">
-						<view class="order-status-left">
-							<text class="order-status-font">已经等候</text><text class="order-status-font1">{this.fmtWaitTime(oitem.createTime, ditem.addTime)}</text><text class="order-status-font">分钟</text>
-						</view>
-						<view class="order-status-right">
-							<text class="order-status-font">第</text><text class="order-status-font1">{oitem.deliverCount}</text><text class="order-status-font">次下单</text><text class="order-status-font2">[{ditem.logisticName}]</text>
-						</view>
-					</view>
-					<view v-if="ditem.status>1" class="order-status-container">
-						<view class="order-status-left">
-							<text class="order-status-font2">[{ditem.logisticName}]</text>
-							<text class="order-status-font2">{ditem.deliverName}</text>
-							<text class="order-status-font">{ditem.deliverPhone}</text>
-						</view>
-						<view class="order-status-right">
-							<text class="order-status-font3">{this.fmtDeliverStatus(ditem.status)} ·</text>
-						</view>
-					</view>
-				</view>
-				
-			</view>
+            <view v-for="(oitem, index) in dataList" class="order-part" data-shop={oitem.thirdShopId} data-id={oitem.id} data-no={oitem.orderSn} data-tag={oitem.channelTag} onclick={this.fnOpenDetailWin}>
+
+                <view class="order-info">
+                    <text class="order-info-number">{oitem.daySn}</text>
+                    <view class="order-info-person">
+                        <text class="order-info-name">{oitem.consignee}</text>
+                        <text class="order-info-addre">{oitem.deliveryPoiAddress}·{oitem.deliveryDistance/1000}公里</text>
+                    </view>
+                    <view class="order-info-phone" data-num={oitem.receiverPhone} onclick={this.fnCall}>
+                        <image src="../../icon/icon_iphone.png" width="24" height="24">电话</image>
+                    </view>                    
+                </view>
+                <view class="menu-box">
+                    <view v-for="(citem,cindex) in oitem.orderItems" class="menu-list">
+                        <text class="menu-list-name">{citem.productName}</text><text class={"menu-list-number"+(citem.productQuantity>1?' red':'')}>X {citem.productQuantity}</text>
+                    </view>
+                    <view class="menu-remark">                        
+                        <text class="menu-remark-fb">备注: {oitem.note}</text>
+                    </view>
+                </view>
+                <view class={"order-time"+(oitem.deliverCount>0?' order-time-border':'')}>
+                    <text class="orer-time-tirp">要求送达：</text>
+                    <text class="order-time-date">{oitem.fmtDeliverTime||''}</text>
+                    <view class="order-pay">
+                        <text class="order-pay-tirp">实付：</text>
+                        <text class="order-pay-cny">￥{oitem.payAmount}</text>
+                    </view>
+                </view>
+                <view class={"order-operate"+(oitem.processStatus==0?' show':' hidden')}>
+                    <button class="order-operate-btn1" onclick={this.fnPrint}>打印</button>
+                    <button class="order-operate-btn2" onclick={this.fnDelivery}>配送下单</button>
+                </view>
+                <view v-for="(ditem,dindex) in oitem.deliveries" :key="dindex" class={"order-status"+(oitem.processStatus>=1?' show':' hidden')} >
+                    <view v-if="ditem.status==1" class="order-status-container">
+                        <view class="order-status-left">
+                            <text class="order-status-font">已经等候</text><text class="order-status-font1">{this.fmtWaitTime(oitem.createTime, ditem.addTime)}</text><text class="order-status-font">分钟</text>
+                        </view>
+                        <view class="order-status-right">
+                            <text class="order-status-font">第</text><text class="order-status-font1">{oitem.deliverCount}</text><text class="order-status-font">次下单</text><text class="order-status-font2">[{ditem.logisticName}]</text>
+                        </view>
+                    </view>
+                    <view v-if="ditem.status>1" class="order-status-container">
+                        <view class="order-status-left">
+                            <text class="order-status-font2">[{ditem.logisticName}]</text>
+                            <text class="order-status-font2">{ditem.deliverName}</text>
+                            <text class="order-status-font">{ditem.deliverPhone}</text>
+                        </view>
+                        <view class="order-status-right">
+                            <text class="order-status-font3">{this.fmtDeliverStatus(ditem.status)} ·</text>
+                        </view>
+                    </view>
+                </view>
+                
+            </view>
 			
 			<view class="footer">
 				<text class="loadDesc">{this.data.haveMoreData?'加载中...':'没有啦！'}</text>
@@ -102,13 +102,18 @@
             },
 			fnDelivery(e){
 				e.stopPropagation && e.stopPropagation();
-                
-                var jsfun = 'fnOpenDeliverySelectorFrame();';
-                api.execScript({
-                    name: 'order',
-                    script: jsfun
+                api.openWin({
+					name: 'deliveryselector',
+                    url: 'widget://pages/delivery/deliveryselector.stml',
+                    bgColor:'#fff',
+                    pageParam:{}
                 });
-                this.toast('delivery')
+                // var jsfun = 'fnOpenDeliverySelectorFrame();';
+                // api.execScript({
+                //     name: 'order',
+                //     script: jsfun
+                // });
+                // this.toast('delivery')
 			},
 			fnOpenDetailWin(e) {
 				api.openWin({
@@ -119,7 +124,8 @@
 						shopId: e.currentTarget.dataset.shop,
 						orderNo: e.currentTarget.dataset.no,
 						tag: e.currentTarget.dataset.tag
-					},
+                    },
+                    bgColor:'#fff',
 					animation: {
 						type: "fade",
 						subType:"from_right",
@@ -373,10 +379,12 @@
    }
   
     .menu-box{
+        height: auto;
         width: 100%;
     }
 	.menu-list{
-		width: 100%;
+        width: 100%;
+        height:auto;
 	}
    .menu-list-name{
        font-size: 13px;
@@ -397,6 +405,7 @@
    }
    .menu-remark{
        width: 100%;
+       height: auto;
        flex-direction: row;
        background-color: #F6F6F6 ;
        padding: 5px 8px;
@@ -427,7 +436,7 @@
        height: 34px;
        border: 1px solid #EBEBEB;
        border-radius: 17px; 
-       margin: 0 5px 0 5px;           
+       margin: 0 5px 0 5px;      
    }
    .order-operate-btn2 {
        width: 45%;
@@ -491,13 +500,13 @@
    }
 
     .footer {
-        height: 44px;
         justify-content: center;
         align-items: center;
         border: none;
     }
 
     .loadDesc {
+        height: 44px;
         width: 200px;
         text-align: center;
     }

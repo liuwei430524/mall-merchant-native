@@ -23,6 +23,7 @@ const $kn = {
         if (param.url) {
             // var baseUrl = 'https://a8888888888888-pd.apicloud-saas.com/api/';
             var baseUrl = 'http://49.233.117.149:8083/';
+            // var baseUrl = 'https://merchant.yunkuowangluo.com/';
             param.url = baseUrl + param.url;
         }
 

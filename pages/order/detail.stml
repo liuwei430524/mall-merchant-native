@@ -55,7 +55,7 @@
                                 <text v-if="nitem.courierName" class="step-info">配送员：{nitem.courierName}</text>
                                 <text v-if="nitem.courierPhone" class="step-info">联系方式：{nitem.courierPhone}</text>
                             </view>
-                            <view v-if="nitem.latitude && nitem.longitude" class="distributor-step-addr" data-lng={nitem.longitude} data-lat={nitem.latitude} onclick={this.fnOpenLocationWin}>
+                            <view v-if="nitem.latitude && nitem.longitude" class="distributor-step-addr" data-lon={nitem.longitude} data-lat={nitem.latitude} onclick={this.fnOpenLocationWin}>
                                 <text class="distributor-step-link">位置 〉</text>
                             </view>
                         </view>
@@ -278,11 +278,11 @@
             fnOpenLocationWin(e){
                 // this.toast(JSON.stringify(e.currentTarget.dataset))
                 var lat = e.currentTarget.dataset.lat;
-                var lng = e.currentTarget.dataset.lng;
+                var lon = e.currentTarget.dataset.lon;
                 api.openWin({
                     name: 'location',
                     url: 'widget://pages/location/main.stml',
-                    pageParam:{lng:lng,lat:lat},
+                    pageParam:{lon:lon,lat:lat},
                     animation: {
                         type: "ripple",
                     }

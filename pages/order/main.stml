@@ -23,7 +23,14 @@
 
 
     <scroll-view id="nav" class="nav" scroll-x='true' show-scrollbar="false">
-        <text v-for="(nitem,index) in wareTypeList" id={nitem.name} data-index={index} data-name={nitem.name} class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} onclick={this.fnSetNavMenuIndex}>{nitem.label}({nitem.size})</text>
+        <view class="nav-menu" v-for="(nitem,index) in wareTypeList" id={nitem.name} data-index={index} data-name={nitem.name} 
+              class={'nav-menu'+(this.data.currentIndex==index?' nav-menu-selected':'')} onclick={this.fnSetNavMenuIndex}>
+              
+            <image v-if="nitem.name=='all'" class="nav-menu-icon" src="../../icon/icon_filer@2x.png" width="16" height="16"></image>
+            <text class={"nav-menu-label"+(this.data.currentIndex==index?' active':'')}>{nitem.label}</text>
+            <text v-if="nitem.name!='all'" class="nav-menu-size">({nitem.size})</text>
+        </view>
+        
     </scroll-view>
     
     <frame-group id="frameGroup" index="0" preload="1" scrollEnabled="true" onchange={this.onFrameGroupChange}></frame-group>
@@ -53,7 +60,7 @@ export default{
     data() {
         return {
             citySelectorOpened: false,
-            deliverySelectorOpened:true,
+            deliverySelectorOpened:false,
             cityName:'北京',
             cityDataList: [],
             shopName:'全部',
@@ -327,12 +334,9 @@ export default{
     .nav {
 		width: 100%;
         height: 40px;
-        /* background-color: #e1017e;
-        background-attachment: fixed;
-		white-space: nowrap; */
     }
 
-    .nav-menu {
+    /* .nav-menu {
 		display: inline-block;
         margin: 0 20px;
         height: 40px;
@@ -353,11 +357,54 @@ export default{
         border: none;
         border-bottom: 4px solid #E87389;
 
-        /* background-image: url(../../image/line-4px.png);
-        background-repeat: no-repeat;
-        background-position: bottom; */
+        // background-image: url(../../image/line-4px.png);
+        //background-repeat: no-repeat;
+        //background-position: bottom; 
+    } */
+
+    .nav-menu {
+		display: inline-block;
+        flex-direction: row;
+        margin: 0 20px;
+        max-width: 100px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background-image: none;
+        border-bottom: none;
     }
 
+    .nav-menu-selected {
+        /* border: none;
+        border-bottom: 4px solid #E87389; */
+
+        background-image: url(../../image/line-4px.png);
+        background-repeat: no-repeat;
+        background-position: bottom;
+    }
+    .nav-menu-icon{
+        width: 16px;
+        height:16px;
+        width: auto;
+        height: 100%;
+    }
+    .nav-menu-label{
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #7B7B7B;
+        width: auto;
+        height: 100%;
+    }
+    .nav-menu-size{
+        width: auto;
+        height: 100%;
+        font-family: PingFangSC-Semibold;
+        font-size: 14px;
+        color: #D2082E;
+    }
+    .active{
+        color: #D2082E;
+    }
     #frameGroup {
         flex: 1;
     }

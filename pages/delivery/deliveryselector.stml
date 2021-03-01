@@ -2,18 +2,18 @@
     <view class="delivery-main">
 		<safe-area></safe-area>
 		<view class="delivery-container">
-			<text class="delivery-close" onclick={this.closeAction}>×</text>
+			<text class="delivery-close" onclick={this.fnCloseDeliveryWin}>×</text>
 			<text class="delivery-title">选择配送平台</text>
 			<scroll-view class="delivery-section-box" scroll-y='true'>
-				
-					<view v-for="(ditem, index) in dataList" class="delivery-section horizontal">
-						<image class="delivery-section-logo" src={'../../image/icon_'+(ditem.name)+'@2x.png'}></image>
-						<text class="delivery-section-name" data-item={ditem} onclick={this.fnSelectCity}>{ditem.label}</text>
-						<text class="delivery-section-coupon">已减3元</text>
-						<text class="delivery-section-fee">4.5元</text>
-						<checkbox class="delivery-section-checked" icon="../../icon/icon_check.png" selectedIcon="../../icon/icon_checked.png" color="#D10028" checked value={ditem.name}/>
-					</view>
-				
+				<checkbox-group class="delivery-checkbox-group" onChange={this.fnCheckSection}>
+				<label v-for="(ditem, index) in dataList" class="delivery-section horizontal" data-item={ditem}>
+					<image class="delivery-section-logo" src={'../../image/icon_'+(ditem.name)+'@2x.png'}></image>
+					<text class="delivery-section-name">{ditem.label}</text>
+					<text class="delivery-section-coupon">已减3元</text>
+					<text class="delivery-section-fee">4.5元</text>
+					<checkbox class="delivery-section-checked" icon="../../icon/icon_check.png" selectedIcon="../../icon/icon_checked.png" color="#D10028" checked={ditem.checked} value={ditem.name}/>
+				</label>
+				</checkbox-group>
 			</scroll-view>
 
 			<view class="delivery-footer">
@@ -26,28 +26,37 @@
 	export default {
 		name: 'deliveryselector',
 		apiready(){//like created
-			this.toast('delivery selector loading');
+			
 		},
 		data() {
 			return{
 				dataList: [
-					{name:"ZPS",label:"自配送",id:1,fee:4.5,coupon:3},
-					{name:"dada",label:"达达",id:2,fee:4.5,coupon:3},
-					{name:"shansong",label:"闪送",id:3,fee:4.5,coupon:3},
-					{name:"shunfeng",label:"顺丰",id:4,fee:4.5,coupon:3},
+					{name:"ZPS",label:"自配送",id:1,fee:4.5,coupon:3,checked:"checked"},
+					{name:"dada",label:"达达",id:2,fee:4.5,coupon:3,checked:false},
+					{name:"shansong",label:"闪送",id:3,fee:4.5,coupon:3,checked:false},
+					{name:"shunfeng",label:"顺丰",id:4,fee:4.5,coupon:3,checked:false},
 				]
 			}
 		},
 		methods: {
-			fnSelectDeliver(){
-
+			fnCheckSection(e){
+				this.toast(JSON.stringify(e.detail.value))
+			},
+			fnSelectDelivery(e){
+				var item = e.target.dataset.item
+				item.checked="checked";
+				this.toast(JSON.stringify(item))
 			},
 			checkboxgroupChanged(){
 
 			},
-			closeAction(){
-				this.toast('close')
-				this.closeFrame();
+			fnCloseDeliveryWin(){
+				api.closeWin();
+			},
+			fnCloseAction(){
+				
+				// this.closeFrame();
+				api.closeWin()
 			},
 			
 			closeFrame(currentLogistic) {
@@ -67,18 +76,17 @@
 	.delivery-main {
         height: 100%;
 		width: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
+        background-color: rgba(0, 0, 0, 0.3);
     }
 	.delivery-container{
 		position:absolute;
 		bottom: 0px;
-		height: 50%;
+		height: 60%;
 		width: 100%;
 		border-top-left-radius: 8px;
 		border-top-right-radius: 8px;
 		background-color: #fff;
-		text-align: center;
-		
+		z-index: 99;
 	}
 	.delivery-close{
 		position: absolute;
@@ -86,17 +94,17 @@
 		width: 50px;
         height: 35px;
         font-size: 35px;
-        /* color: #fff; */
         text-align: center;
+		z-index: 100;
 	}
 	.delivery-title{
 		align-self: center;
         width: 100%;
-        padding: 10px 0;
-		/* padding-left: 10px; */
+		height: 60px;
+        padding: 10px ;
         font-family: PingFangSC-Regular;
 		font-size: 14px;
-        text-align: left;
+		font-weight: bold;
 	}
 	.vertical {
         flex-direction: column;
@@ -106,60 +114,56 @@
 	.horizontal{
         flex-direction: row;
 		width: 100%;
-		height:100%;
+		height:auto;
 	}
 	.delivery-section-box{
-		padding: 10px 0;
+		margin-bottom: 60px;
 		width: 100%;
 		height: 100%;
 	}
+	.delivery-checkbox-group{
+		width: 100%;
+		height: auto;
+	}
 	.delivery-section {
         width: 100%;
-		height: 44px;
-		flex:1;
+		height: 20px;
 		padding: 10px 0;
     }
 	.delivery-section-logo{
-		flex: 1;
-		width: 24px;
+		width: 10%;
         height: 24px;
-		/* padding: 0 5px; */
+		padding: 0 5px;
 	}
 
 	.delivery-section-name{
-		flex: 1;
 		width: 30%;
-        height: 44px;
+        height: 24px;
 		padding: 0 5px;
         font-size: 14px;
 	}
 
 	.delivery-section-coupon{
-		flex: 1;
-		width: auto;
-        height: 44px;
+		width: 25%;
+        height: 24px;
 		padding: 0 5px;
         font-size: 14px;
         color: #D10028;
+		text-align: right;
 	}
 
 	.delivery-section-fee{
-		flex: 1;
-		width: auto;
-        height: 44px;
+		width: 25%;
+        height: 24px;
 		padding: 0 5px;
         font-size: 14px;
-        /* color: #fff; */
+		text-align: right;
 	}
 
 
 	.delivery-section-checked{
-		flex: 1;
 		width: 24px;
         height: 24px;
-		/* color:#D10028 */
-		/* padding: 0 10px; */
-        /* font-size: 14px; */
 	}
 
 	.delivery-footer{
